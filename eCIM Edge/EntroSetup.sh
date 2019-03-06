@@ -58,9 +58,9 @@ if [ grep -Fxq 'bantime  = -1' /etc/fail2ban/jail.conf ]; then
   echo "Exists"
 else
   echo "Does noy Exist"
-  if [ -e /etc/fail2ban/jail.conf ]; then
-    sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
-  fi
+#  if [ -e /etc/fail2ban/jail.conf ]; then
+#    sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
+#  fi
 fi
 
 
