@@ -6,6 +6,8 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
 echo "EntroCIM Installer"
 
+cDIR='PWD'
+
 # check for entrocim user
 hasUser=false
 getent passwd entrocim >/dev/null 2>&1 && hasUser=true
@@ -39,6 +41,9 @@ read heapmax
 if [ -z $heapmax ]; then
     heapmax="512M"
 fi
+
+# Get Latest EntroCIM Installer, Extract and Copy to $install_path
+
 
 echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > start.sh
 chmod +x start.sh
