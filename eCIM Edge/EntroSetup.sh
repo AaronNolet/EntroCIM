@@ -7,6 +7,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 echo "EntroCIM Installer"
 
 cDIR='PWD'
+cls
 
 # check for entrocim user
 hasUser=false
@@ -58,17 +59,24 @@ if [ -z "${JAVA_HOME}" ]; then
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
+if [[ -e "$cDIR/entrocim/EntroCIM.zip" ]]; then
 echo -n "Would you like to retrieve the Latest EntroCIM installer (N/y): "
 read eCIMget
-eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
 
-if [ $eCIMget == "y" ]; then
-  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
-  cd entrocim
-  unzip EntroCIM.zip
-  cd ..
-  cp -R ~/entrocim/finstack/* $install_path/
-  chown -R entrocim:entrocim $install_path/
+  if [ -z $eCIMget ]; then
+    eCIMget="n"
+  fi
+
+  eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
+
+  if [ $eCIMget == "y" ]; then
+    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+    cd entrocim
+    unzip EntroCIM.zip
+    cd ..
+    cp -R ~/entrocim/finstack/* $install_path/
+    chown -R entrocim:entrocim $install_path/
+  fi
 fi
 
 #Create Firewall App Rule for EntroCIM
