@@ -42,8 +42,17 @@ if [ -z $heapmax ]; then
     heapmax="512M"
 fi
 
+# Install latest Default-JRE
+apt-get install default-jre -y
+if [ -z "${JAVA_HOME-}" ]; then
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;
+fi
+
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
 apt-get install unzip && mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+unzip ~/entrocim/EntroCIM.zip
+cp -R ~/entrocim/finstack/* $install_path/
+chown entrocim:entrocim -R $install_path/
 
 #Create Firewall App Rule for EntroCIM
 echo -e '[EntroCIM]
