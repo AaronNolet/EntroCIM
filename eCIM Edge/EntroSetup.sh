@@ -53,7 +53,7 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
-apt-get install unzip && mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+apt-get install unzip htop && mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
 cd entrocim
 unzip EntroCIM.zip
 cd ..
