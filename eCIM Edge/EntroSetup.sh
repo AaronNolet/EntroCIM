@@ -60,6 +60,7 @@ else
   if [ -e /etc/fail2ban/jail.conf ]; then
     sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
     echo "Auto Configuration of Fail2Ban has succeeded..."
+    service fail2ban restart
   else
     echo "Problem with Auto Configuration of Fail2Ban"
   fi
