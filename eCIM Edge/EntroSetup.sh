@@ -25,6 +25,10 @@ read install_path
 if [ -z "$install_path" ] || [ "$install_path" == "/" ]; then
     install_path="/opt/entrocim"
 fi
+if [ ! -d "$install_path" ]; then
+  echo "Creating Install Path"
+  mkdir $install_path
+fi
 
 chown -R entrocim:entrocim "$install_path/"
 
