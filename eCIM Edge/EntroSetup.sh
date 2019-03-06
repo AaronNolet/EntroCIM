@@ -43,9 +43,17 @@ if [ -z $heapmax ]; then
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
+apt-get install unzip && mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
 
+#Create Firewall App Rule for EntroCIM
+echo -e '[EntroCIM]
+title=EntroCIM Web Server
+description=EntroCIM Default HTTP Web Port (8085)
+ports='$port'/tcp' > /etc/ufw/applications.d/entrocim-server
 
-echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > start.sh
+ufw allow OpenSSH && ufw allow EntroCIM && ufw enable -y
+
+echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x start.sh
 
 echo -n "Automatically run EntroCIM at startup (N/y): "
