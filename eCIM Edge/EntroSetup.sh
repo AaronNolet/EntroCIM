@@ -43,13 +43,14 @@ echo -n "Enter Java Heap Max Size for EntroCIM Service (512M): "
 read heapmax
 
 if [ -z $heapmax ]; then
-    heapmax="512M"
+  heapmax="512M"
 fi
 
 # Install latest Default-JRE
 apt-get install default-jre -y
 if [ -z "${JAVA_HOME}" ]; then
-echo 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;' >> /etc/environment
+  echo "Adding Java Home Environment"
+  echo 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;' >> /etc/environment
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
