@@ -61,6 +61,10 @@ echo '#!/bin/sh
 ### END INIT INFO
 # /etc/init.d/entrocim
 
+# File Open MAX Service Fix - Added by IoT Warez, LLC
+ulimit -Hn 200000
+ulimit -Sn 200000
+
 # set maximum memory allocated for EntroCIM
 HeapSize="'$heapmax'"
 # set the HTTP port EntroCIM listen on
