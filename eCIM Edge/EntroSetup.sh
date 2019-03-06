@@ -46,28 +46,46 @@ if [ -z $heapmax ]; then
   heapmax="512M"
 fi
 
-# Install latest Default-JRE
-apt-get install default-jre -y
+# Install latest Default-JRE, unzip and htop
+echo "Installing EntroCIM pre-requisites..."
+echo ""
+
+apt-get install -y unzip htop default-jre
+
 if [ -z "${JAVA_HOME}" ]; then
   echo "Adding Java Home Environment"
   echo 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;' >> /etc/environment
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
-apt-get install -y unzip htop && mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
-cd entrocim
-unzip EntroCIM.zip
-cd ..
-cp -R ~/entrocim/finstack/* $install_path/
-chown -R entrocim:entrocim $install_path/
+echo -n "Would you like to retrieve the Latest EntroCIM installer (N/y): "
+read eCIMget
+eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
+
+if [ $eCIMget == "y" ]; then
+  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+  cd entrocim
+  unzip EntroCIM.zip
+  cd ..
+  cp -R ~/entrocim/finstack/* $install_path/
+  chown -R entrocim:entrocim $install_path/
+fi
 
 #Create Firewall App Rule for EntroCIM
-echo -e '[EntroCIM]
-title=EntroCIM Web Server
-description=EntroCIM HTTP Web Port ('$port')
-ports='$port'/tcp' > /etc/ufw/applications.d/entrocim-server
+echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
+read eCIMfw
+eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
+if [ $eCIMfw == "y" ]; then
+  echo "Adding new ufw firewall app rule and enabling"
+  echo ""
+  echo -e '[EntroCIM]
+  title=EntroCIM Web Server
+  description=EntroCIM HTTP Web Port ('$port')
+  ports='$port'/tcp' > /etc/ufw/applications.d/entrocim-server
 
-ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
+  echo "Enabling UFW Firewall"
+  ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
+fi
 
 echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x $install_path/bin/start.sh
