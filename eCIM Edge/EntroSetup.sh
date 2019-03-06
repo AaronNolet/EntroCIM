@@ -5,7 +5,7 @@ set -e
 trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
 echo "EntroCIM Installer"
-#Hello World
+
 cDIR='PWD'
 clear
 
@@ -51,7 +51,18 @@ fi
 echo "Installing EntroCIM pre-requisites..."
 echo ""
 
-apt-get install -y unzip htop default-jre
+apt-get install -y unzip htop default-jre fail2ban
+
+#Set Fail2Ban Options
+if [ grep -Fxq 'bantime  = -1' /etc/fail2ban/jail.conf ]; then
+  echo "Exists"
+else
+  echo "Does noy Exist"
+  if [ -e /etc/fail2ban/jail.conf ]; then
+    sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
+  fi
+fi
+
 
 if [ -z "${JAVA_HOME}" ]; then
   echo "Adding Java Home Environment"
