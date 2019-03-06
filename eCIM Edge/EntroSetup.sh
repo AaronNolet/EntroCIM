@@ -55,6 +55,7 @@ apt-get install -y unzip htop default-jre fail2ban
 
 #Set Fail2Ban Options
 if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
+  echo "Fail2Ban Already Exists and is Configured"
 else
   if [ -e /etc/fail2ban/jail.conf ]; then
     sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
