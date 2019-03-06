@@ -63,7 +63,7 @@ chown -R entrocim:entrocim $install_path/
 #Create Firewall App Rule for EntroCIM
 echo -e '[EntroCIM]
 title=EntroCIM Web Server
-description=EntroCIM Default HTTP Web Port (8085)
+description=EntroCIM HTTP Web Port ('$port')
 ports='$port'/tcp' > /etc/ufw/applications.d/entrocim-server
 
 ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
