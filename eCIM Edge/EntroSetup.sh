@@ -7,7 +7,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 echo "EntroCIM Installer"
 
 cDIR='PWD'
-cls
+clear
 
 # check for entrocim user
 hasUser=false
@@ -59,7 +59,7 @@ if [ -z "${JAVA_HOME}" ]; then
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
-if [[ -e "$cDIR/entrocim/EntroCIM.zip" ]]; then
+if [ -e ~/entrocim/EntroCIM.zip ]; then
 echo -n "Would you like to retrieve the Latest EntroCIM installer (N/y): "
 read eCIMget
 
