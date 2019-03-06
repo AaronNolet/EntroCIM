@@ -48,7 +48,7 @@ fi
 
 # Install latest Default-JRE
 apt-get install default-jre -y
-if [ -z "${JAVA_HOME-}" ]; then
+if [ -z "${JAVA_HOME}" ]; then
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;
 fi
 
