@@ -26,7 +26,7 @@ sleep 10
 ls -l $FolderMonitor > /tmp/watchfile2
 diff -q /tmp/watchfile /tmp/watchfile2 > /dev/null
 if [ $? -ne 0 ] ; then
-  if [ "$SkyFin" == "Fin" ]; then 
+  if [ "$SkyFin" == "Fin" ]; then
     echo "Restarting finstack Service"
     service finstack stop
     sleep 10

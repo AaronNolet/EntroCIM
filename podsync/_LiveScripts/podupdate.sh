@@ -1,10 +1,10 @@
 #!/bin/bash
 #
 #  DESCRIPTION
-#  This program retrieves a remote custom POD list for Fin Stack or 
-#  SkySpark Server from IoT Warez's custom POD's remote storage based 
+#  This program retrieves a remote custom POD list for Fin Stack or
+#  SkySpark Server from IoT Warez's custom POD's remote storage based
 #  on the system's hostname.
-#  
+#
 #  Once the list is retrieved, it then generates POD-Add and POD-Remove
 #  files to use as vars and manipulates local file system via rsync
 #  using SSH with secured key.
@@ -12,14 +12,14 @@
 #  INFORMATION ON USAGE
 #  This script requires that Fin Stack or SkySpark is installed on the
 #  local host.
-#  
+#
 #  This script should be setup under the "finstack" or "skyspark" user's
 #  crontab.
 #
 #  sudo crontab -u finstack -e or sudo crontab -u skyspark -e
 #
 #  Add Line "05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/
-#  podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 
+#  podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log
 #  2>&1; $HOME/scripts/sendlog.sh #Added by #IoT Warez, LLC"
 #
 #  ****************************************************************
