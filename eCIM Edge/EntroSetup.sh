@@ -66,7 +66,7 @@ title=EntroCIM Web Server
 description=EntroCIM Default HTTP Web Port (8085)
 ports='$port'/tcp' > /etc/ufw/applications.d/entrocim-server
 
-ufw allow OpenSSH && ufw allow EntroCIM && ufw enable -y
+ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
 
 echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x start.sh
