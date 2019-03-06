@@ -141,6 +141,7 @@ esac
 
 exit 0' > /etc/init.d/entrocim
 chmod 755 /etc/init.d/entrocim
+
 # bind the service
 if [ -f "/usr/sbin/update-rc.d" ]; then
     update-rc.d entrocim defaults > /dev/null
@@ -160,7 +161,6 @@ postrotate
     touch /var/log/entrocim.log
 endscript
 }' > /etc/logrotate.d/entrocim
-
 
 # start the service
 /etc/init.d/entrocim restart
