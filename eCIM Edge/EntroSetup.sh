@@ -54,7 +54,7 @@ fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
 apt-get install unzip && mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
-unzip ~/entrocim/EntroCIM.zip
+unzip -d ~/entrocim/EntroCIM.zip ~/entrocim/
 cp -R ~/entrocim/finstack/* $install_path/
 chown -R entrocim:entrocim $install_path/
 
