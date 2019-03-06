@@ -77,6 +77,13 @@ read eCIMget
     cp -R ~/entrocim/finstack/* $install_path/
     chown -R entrocim:entrocim $install_path/
   fi
+else
+  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+  cd entrocim
+  unzip EntroCIM.zip
+  cd ..
+  cp -R ~/entrocim/finstack/* $install_path/
+  chown -R entrocim:entrocim $install_path/
 fi
 
 #Create Firewall App Rule for EntroCIM
