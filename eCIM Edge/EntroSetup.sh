@@ -5,7 +5,7 @@ set -e
 trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
 echo "EntroCIM Installer"
-
+#Hello World
 cDIR='PWD'
 clear
 
