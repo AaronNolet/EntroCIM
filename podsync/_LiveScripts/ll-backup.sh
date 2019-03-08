@@ -1,7 +1,7 @@
 #!/bin/bash
 HOSTNAME=$(hostname)
 BACKDEST=https://nextcloud.heptasystems.com:8443/nextcloud/s/ZTsdkpGk3ECgwrX
-LATESTSNAP=`ls -rt /apps/finstack/db/londonlife/snapshots/* | tail -1`
+LATESTSNAP=`ls -rt /apps/finstack/db/londonLife/snapshots/* | tail -1`
 BACKFILE=$HOSTNAME-Snapshot.zip
 LOGLOC=/data/hepta
 
