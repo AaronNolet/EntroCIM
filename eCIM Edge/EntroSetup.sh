@@ -7,6 +7,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 echo "EntroCIM Installer"
 
 cDIR='PWD'
+clear
 
 # check for entrocim user
 hasUser=false
@@ -25,6 +26,10 @@ read install_path
 if [ -z "$install_path" ] || [ "$install_path" == "/" ]; then
     install_path="/opt/entrocim"
 fi
+if [ ! -d "$install_path" ]; then
+  echo "Creating Install Path"
+  mkdir $install_path
+fi
 
 chown -R entrocim:entrocim "$install_path/"
 
@@ -39,14 +44,80 @@ echo -n "Enter Java Heap Max Size for EntroCIM Service (512M): "
 read heapmax
 
 if [ -z $heapmax ]; then
-    heapmax="512M"
+  heapmax="512M"
+fi
+
+# Install latest Default-JRE, unzip and htop
+echo "Installing EntroCIM pre-requisites..."
+echo ""
+
+apt-get install -y unzip htop default-jre fail2ban
+
+#Set Fail2Ban Options
+if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
+  echo "Fail2Ban Already Exists and is Configured"
+else
+  if [ -e /etc/fail2ban/jail.conf ]; then
+    sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
+    echo "Auto Configuration of Fail2Ban has succeeded..."
+    service fail2ban restart
+  else
+    echo "Problem with Auto Configuration of Fail2Ban"
+  fi
+fi
+
+
+if [ -z "${JAVA_HOME}" ]; then
+  echo "Adding Java Home Environment"
+  echo 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;' >> /etc/environment
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
+if [ -e ~/entrocim/EntroCIM.zip ]; then
+echo -n "Would you like to retrieve the Latest EntroCIM installer (N/y): "
+read eCIMget
 
+  if [ -z $eCIMget ]; then
+    eCIMget="n"
+  fi
 
-echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > start.sh
-chmod +x start.sh
+  eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
+
+  if [ $eCIMget == "y" ]; then
+    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+    cd entrocim
+    unzip EntroCIM.zip
+    cd ..
+    cp -R ~/entrocim/finstack/* $install_path/
+    chown -R entrocim:entrocim $install_path/
+  fi
+else
+  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+  cd entrocim
+  unzip EntroCIM.zip
+  cd ..
+  cp -R ~/entrocim/finstack/* $install_path/
+  chown -R entrocim:entrocim $install_path/
+fi
+
+#Create Firewall App Rule for EntroCIM
+echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
+read eCIMfw
+eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
+if [ $eCIMfw == "y" ]; then
+  echo "Adding new ufw firewall app rule and enabling"
+  echo ""
+  echo -e '[EntroCIM]
+  title=EntroCIM Web Server
+  description=EntroCIM HTTP Web Port ('$port')
+  ports='$port'/tcp' > /etc/ufw/applications.d/entrocim-server
+
+  echo "Enabling UFW Firewall"
+  ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
+fi
+
+echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
+chmod +x $install_path/bin/start.sh
 
 echo -n "Automatically run EntroCIM at startup (N/y): "
 read auto_start
