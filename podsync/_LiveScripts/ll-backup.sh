@@ -1,4 +1,6 @@
 #!/bin/bash
+export https_proxy=https://gwwcfproxy.gwl.bz:8443
+export proxy=http://gwwcfproxy.gwl.bz:8080
 HOSTNAME=$(hostname)
 BACKDEST=https://nextcloud.heptasystems.com:8443/nextcloud/s/ZTsdkpGk3ECgwrX
 LATESTSNAP=`ls -rt /apps/finstack/db/londonLife/snapshots/* | tail -1`
