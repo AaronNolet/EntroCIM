@@ -12,11 +12,11 @@ fi
 echo $LATESTSNAP > $LOGLOC/latestsnap.log
 
 if [ ! -f $LOGLOC/priorsnap.log]; then
-  cp $LOGLOC/latestsnap.log > $LOGLOC/priorsnap.log
+  cat $LOGLOC/latestsnap.log > $LOGLOC/priorsnap.log
 fi
 
 diff -q $LOGLOC/latestsnap.log $LOGLOC/priorsnap.log > /dev/null
 if [ $? -ne 0 ] ; then
   ~/cloudsend.sh $LOGLOC/$BACKFILE $BACKDEST
-  cp $LOGLOC/latestsnap.log > $LOGLOC/priorsnap.log
+  cat $LOGLOC/latestsnap.log > $LOGLOC/priorsnap.log
 fi
