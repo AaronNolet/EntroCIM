@@ -5,13 +5,13 @@ LATESTSNAP=`ls -rt /apps/finstack/db/*/snapshots/* | tail -1`
 BACKFILE=$HOSTNAME-Snapshot.zip
 LOGLOC=/data/hepta
 
-if [ ! -e $LOGLOC/$BACKFILE ]; then
+if [ ! -f $LOGLOC/$BACKFILE ]; then
   cp $LATESTSNAP $LOGLOC/$BACKFILE
 fi
 
 echo $LATESTSNAP > $LOGLOC/latestsnap.log
 
-if [ ! -e $LOGLOC/priorsnap.log]; then
+if [ ! -f $LOGLOC/priorsnap.log]; then
   cp $LOGLOC/latestsnap.log > $LOGLOC/priorsnap.log
 fi
 
