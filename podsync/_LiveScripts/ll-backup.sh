@@ -6,7 +6,7 @@ BACKFILE=$HOSTNAME-Snapshot.zip
 LOGLOC=/data/hepta
 
 if [ ! -e $LOGLOC/$BACKFILE ]; then
-  cp $LATESTSNAP > $LOGLOC/$BACKFILE
+  cp $LATESTSNAP $LOGLOC/$BACKFILE
 fi
 
 echo $LATESTSNAP > $LOGLOC/latestsnap.log
