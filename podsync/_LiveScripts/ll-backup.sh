@@ -11,8 +11,8 @@ fi
 
 echo $LATESTSNAP > $LOGLOC/latestsnap.log
 
-if [ ! -f $LOGLOC/priorsnap.log]; then
-  cat $LOGLOC/latestsnap.log > $LOGLOC/priorsnap.log
+if [ ! -f $LOGLOC/priorsnap.log ]; then
+  echo 'No prior snapshots...' > $LOGLOC/priorsnap.log
 fi
 
 diff -q $LOGLOC/latestsnap.log $LOGLOC/priorsnap.log > /dev/null
