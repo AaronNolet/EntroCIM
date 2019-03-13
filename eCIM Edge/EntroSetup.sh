@@ -105,7 +105,7 @@ else
 fi
 
 # Add Secured SSH Communications...
-if [ ! -f etc/cron.allow ]; then
+if [ ! -f /etc/cron.allow ]; then
   wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O ~/entrocim/podupdate.zip
   cd entrocim
   7z e podupdate.zip -aoa -p'!xjGd3r9&0Eq'
@@ -119,7 +119,7 @@ if [ ! -f etc/cron.allow ]; then
   sudo -H -u entrocim bash -c "/home/entrocim/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; /home/entrocim/scripts/sendlog.sh"
 fi
 
-if grep -Fq "$HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim; then
+if grep -Fqs "$HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim; then
   echo "Automatic Updates are already enabled..."
 else
   if [ ! -f /var/spool/cron/crontabs/entrocim ]; then
@@ -130,7 +130,7 @@ else
   fi
 fi
 
-if grep -Fq "/home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
+if grep -Fqs "/home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
   echo "Automatic Updates are already enabled..."
 else
   if [ ! -f /var/spool/cron/crontabs/root ]; then
