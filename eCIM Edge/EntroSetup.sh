@@ -10,8 +10,6 @@ HOSTNAME=$(hostname)
 set -f
 ECRON=$'05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME\'_podupdate_\'`date \'+\%b-\%d-\%Y\'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC'
 RCRON=$'00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
-GETVAR1=$(wget -qO- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-echo "GETVAR1: "$GETVAR1
 
 echo "EntroCIM Installer"
 
@@ -111,6 +109,7 @@ fi
 
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
+  GETVAR1=$(wget -qO- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
   wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O ~/entrocim/podupdate.zip
   cd entrocim
   7z e podupdate.zip -aoa -p'$GETVAR1'
