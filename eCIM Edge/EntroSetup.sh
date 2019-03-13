@@ -4,6 +4,10 @@ set -e
 # Install a trap to catch errors and clean-up temp files
 trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
+
+#Set Vars
+HOSTNAME=$(hostname)
+
 echo "EntroCIM Installer"
 
 cDIR='PWD'
@@ -111,6 +115,19 @@ if [ ! -e etc/cron.allow ]; then
   chown -R entrocim:entrocim /home/entrocim/ && chmod 0400 /home/entrocim/.ssh/id_rsa
   rsync -rltvhz -e "/usr/bin/ssh -o StrictHostKeyChecking=no -i /home/entrocim/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_info/updatescripts.sh /home/entrocim/IoT_Warez/  &&  chown -R entrocim:entrocim /home/entrocim/ && cp /root/.ssh/known_hosts /home/entrocim/.ssh/
   echo -e 'entrocim' > /etc/cron.allow
+  sudo -H -u entrocim bash -c /home/entrocim/IoT_Warez/updatescripts.sh
+  sudo -H -u entrocim bash -c "/home/entrocim/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; /home/entrocim/scripts/sendlog.sh"
+fi
+
+if grep -Fxq "$HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /etc/fail2ban/jail.conf; then
+  echo "
+  Automatic Updates are already enabled...
+  "
+else
+  if [ ! -e /var/spool/cron/crontabs/entrocim ]; then
+    echo -e "SHELL=/bin/bash
+    05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" > /var/spool/cron/crontabs/entrocim
+  fi
 fi
 
 #Create Firewall App Rule for EntroCIM
