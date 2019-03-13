@@ -130,6 +130,18 @@ else
   fi
 fi
 
+if grep -Fq "/home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
+  echo "Automatic Updates are already enabled..."
+else
+  if ! [ -e /var/spool/cron/crontabs/root ]; then
+    echo -e "00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" > /var/spool/cron/crontabs/root
+    chown root:crontab /var/spool/cron/crontabs/root
+    chmod 600 /var/spool/cron/crontabs/root
+  fi
+fi
+
+00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC
+
 #Create Firewall App Rule for EntroCIM
 echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
 read eCIMfw
