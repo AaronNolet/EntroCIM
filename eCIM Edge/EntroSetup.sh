@@ -119,7 +119,7 @@ if [ ! -e etc/cron.allow ]; then
   sudo -H -u entrocim bash -c "/home/entrocim/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; /home/entrocim/scripts/sendlog.sh"
 fi
 
-if grep -Fq "$HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim; then
+if [ grep -Fq "$HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim ]; then
   echo "Automatic Updates are already enabled..."
 else
   if [ ! -e /var/spool/cron/crontabs/entrocim ]; then
@@ -130,7 +130,7 @@ else
   fi
 fi
 
-if grep -Fq "/home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
+if [ grep -Fq "/home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root ]; then
   echo "Automatic Updates are already enabled..."
 else
   if ! [ -e /var/spool/cron/crontabs/root ]; then
@@ -139,8 +139,6 @@ else
     chmod 600 /var/spool/cron/crontabs/root
   fi
 fi
-
-00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC
 
 #Create Firewall App Rule for EntroCIM
 echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
