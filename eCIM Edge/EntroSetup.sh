@@ -7,7 +7,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 
 #Set Vars
 HOSTNAME=$(hostname)
-
+set -f
 ECRON=$'05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME\'_podupdate_\'`date \'+\%b-\%d-\%Y\'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC'
 RCRON=$'00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
 
@@ -126,9 +126,7 @@ if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /
   echo "Automatic Updates are already enabled..."
 else
   if [ ! -f /var/spool/cron/crontabs/entrocim ]; then
-    set -f
     echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/crontabs/entrocim
-    set +f
     chown entrocim:crontab /var/spool/cron/crontabs/entrocim
     chmod 600 /var/spool/cron/crontabs/entrocim
   fi
@@ -138,9 +136,7 @@ if grep -Fqs "/home/entrocim/scripts/fail2ban-allstatus.sh #Added by IoT Warez, 
   echo "Automatic Updates are already enabled..."
 else
   if [ ! -f /var/spool/cron/crontabs/root ]; then
-    set -f
     echo -e $RCRON > /var/spool/cron/crontabs/root
-    set +f
     chown root:crontab /var/spool/cron/crontabs/root
     chmod 600 /var/spool/cron/crontabs/root
   fi
