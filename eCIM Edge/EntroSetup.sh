@@ -130,11 +130,11 @@ else
   fi
 fi
 
-if grep -Fqs "/home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
+if grep -Fqs "/home/entrocim/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
   echo "Automatic Updates are already enabled..."
 else
   if [ ! -f /var/spool/cron/crontabs/root ]; then
-    echo -e "00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" > /var/spool/cron/crontabs/root
+    echo -e "00 04 * * * /home/entrocim/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" > /var/spool/cron/crontabs/root
     chown root:crontab /var/spool/cron/crontabs/root
     chmod 600 /var/spool/cron/crontabs/root
   fi
