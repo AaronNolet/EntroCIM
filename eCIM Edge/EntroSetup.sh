@@ -125,6 +125,8 @@ else
   if [ ! -e /var/spool/cron/crontabs/entrocim ]; then
     echo -e "SHELL=/bin/bash
     05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" > /var/spool/cron/crontabs/entrocim
+    chown /var/spool/cron/crontabs/entrocim entrocim:crontab
+    chmod /var/spool/cron/crontabs/entrocim 600
   fi
 fi
 
