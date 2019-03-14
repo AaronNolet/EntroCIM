@@ -109,7 +109,7 @@ if [ ! -f /etc/cron.allow ]; then
   GETVAR1=$(wget -qO- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
   wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O ~/entrocim/podupdate.zip
   cd entrocim
-  7z e podupdate.zip -aoa -p'$GETVAR1'
+  7z e podupdate.zip -aoa -p$GETVAR1
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
   cp podupdate.log /home/entrocim/.ssh/id_rsa
   rm podupdate.log podupdate.zip
