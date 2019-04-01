@@ -162,7 +162,16 @@ if [ $eCIMfw == "y" ]; then
   ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
 fi
 
-echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar:/lib/java/jline.jar: -Dfan.home=../ fanx.tools.Fan finStackHost -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
+#Set http port in host
+if [ -e $install_path/var/host/folio.trio ]; then
+  sed -i -e 's/httpPort:8080/httpPort:'$port'/g' $install_path/var/host/folio.trio
+  echo "Auto Configuration of Port has succeeded..."
+  service fail2ban restart
+else
+  echo "Problem with Auto Configuration of Port"
+fi
+
+echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar:/lib/java/jline.jar: -Dfan.home=../ fanx.tools.Fan finStackHost  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x $install_path/bin/start.sh
 
 echo -n "Automatically run EntroCIM at startup (N/y): "
@@ -194,7 +203,7 @@ PortNumber="'$port'"
 HomeFolder='$install_path'
 
 JRE="java -Xmx$HeapSize"
-StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar:$HomeFolder/lib/java/jline.jar: -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost -httpPort $PortNumber"
+StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar:$HomeFolder/lib/java/jline.jar: -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost"
 
 PIDFile="/var/run/entrocim.pid"
 LogFile="/var/log/entrocim.log"
