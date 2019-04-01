@@ -7,6 +7,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 
 #Set Vars
 HOSTNAME=$(hostname)
+NXTLINK="KeRmPnZSQyosmNM"
 
 echo "EntroCIM Installer"
 
@@ -88,7 +89,7 @@ read eCIMget
   eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
 
   if [ $eCIMget == "y" ]; then
-    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
     cd entrocim
     7z x EntroCIM.zip -aoa
     cd ..
@@ -96,7 +97,7 @@ read eCIMget
     chown -R entrocim:entrocim $install_path/
   fi
 else
-  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
