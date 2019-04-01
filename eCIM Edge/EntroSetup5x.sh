@@ -162,7 +162,7 @@ if [ $eCIMfw == "y" ]; then
   ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
 fi
 
-echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
+echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar:/lib/java/jline.jar -Dfan.home=../ fanx.tools.Fan finStackHost -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x $install_path/bin/start.sh
 
 echo -n "Automatically run EntroCIM at startup (N/y): "
@@ -194,7 +194,7 @@ PortNumber="'$port'"
 HomeFolder='$install_path'
 
 JRE="java -Xmx$HeapSize"
-StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar -Dfan.home=$HomeFolder fanx.tools.Fan proj -httpPort $PortNumber"
+StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar:$HomeFolder/lib/java/jline.jar -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost -httpPort $PortNumber"
 
 PIDFile="/var/run/entrocim.pid"
 LogFile="/var/log/entrocim.log"
