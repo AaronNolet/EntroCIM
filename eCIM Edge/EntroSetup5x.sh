@@ -164,7 +164,7 @@ fi
 
 #Set http port in host
 if [ -e $install_path/var/host/folio.trio ]; then
-  sed -i -e 's/httpPort:./httpPort:'$port'/g' $install_path/var/host/folio.trio
+  sed -i -e 's/httpPort:.*/httpPort:'$port'/g' $install_path/var/host/folio.trio
   echo "Auto Configuration of Port has succeeded..."
   service fail2ban restart
 else
