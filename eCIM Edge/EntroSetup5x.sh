@@ -166,7 +166,7 @@ fi
 if [ -e $install_path/var/host/folio.trio ]; then
   sed -i -e 's/httpPort:.*/httpPort:'$port'/' $install_path/var/host/folio.trio
   echo "Auto Configuration of Port has succeeded..."
-  service entrocim restart
+  # service entrocim restart
 else
   echo "Problem with Auto Configuration of Port"
 fi
