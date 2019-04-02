@@ -7,6 +7,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 
 #Set Vars
 HOSTNAME=$(hostname)
+NXTLINK="KeRmPnZSQyosmNM"
 
 echo "EntroCIM Installer"
 
@@ -88,7 +89,7 @@ read eCIMget
   eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
 
   if [ $eCIMget == "y" ]; then
-    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
     cd entrocim
     7z x EntroCIM.zip -aoa
     cd ..
@@ -96,7 +97,7 @@ read eCIMget
     chown -R entrocim:entrocim $install_path/
   fi
 else
-  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/ntZSeearSdm2REy/download -O ~/entrocim/EntroCIM.zip
+  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
@@ -161,7 +162,16 @@ if [ $eCIMfw == "y" ]; then
   ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
 fi
 
-echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
+#Set http port in host
+if [ -e $install_path/var/host/folio.trio ]; then
+  sed -i -e 's/httpPort:.*/httpPort:'$port'/' $install_path/var/host/folio.trio
+  echo "Auto Configuration of Port has succeeded..."
+  # service entrocim restart
+else
+  echo "Problem with Auto Configuration of Port"
+fi
+
+echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar:/lib/java/jline.jar: -Dfan.home=../ fanx.tools.Fan finStackHost  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x $install_path/bin/start.sh
 
 echo -n "Automatically run EntroCIM at startup (N/y): "
@@ -193,7 +203,7 @@ PortNumber="'$port'"
 HomeFolder='$install_path'
 
 JRE="java -Xmx$HeapSize"
-StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar -Dfan.home=$HomeFolder fanx.tools.Fan proj -httpPort $PortNumber"
+StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar:$HomeFolder/lib/java/jline.jar: -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost"
 
 PIDFile="/var/run/entrocim.pid"
 LogFile="/var/log/entrocim.log"
