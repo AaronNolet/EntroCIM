@@ -73,12 +73,12 @@ else
 fi
 
 echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
-echo ""
 read eCIMfw
+echo ""
 
 echo -n "Automatically run EntroCIM at startup (N/y): "
-echo ""
 read auto_start
+echo ""
 
 # Install latest Default-JRE, 7zip and htop
 echo "Installing EntroCIM pre-requisites..."
@@ -110,10 +110,10 @@ if [ -z "${JAVA_HOME}" ]; then
 fi
 
 #Set FOG environment var
-if [ $fogenabled == "y" ]; then
+if [ $fogenabled == "y" &&  -z "${CUST_CODE}" ]; then
   echo "Adding EntroCIM FOG Environment"
   echo ""
-  echo "CUST_CODE=$custcode;" >> /etc/environment
+  echo "CUST_CODE=$custcode" >> /etc/environment
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
