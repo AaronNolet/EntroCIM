@@ -395,6 +395,5 @@ endscript
 
 # start the service
 /etc/init.d/onchange restart
-fi
 
 exit 0
