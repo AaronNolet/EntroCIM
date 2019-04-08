@@ -145,7 +145,7 @@ else
 fi
 
 if [ $fogenabled == "y" ]; then
-  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTFOGLINK/download?path=%2F&files=$custcode_DCLinuxAgent.zip -O ~/entrocim/$custcode_DCLinuxAgent.zip
+  mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/'$NXTFOGLINK'/download?path=%2F&files='$custcode'_DCLinuxAgent.zip" -O "~/entrocim/'$custcode'_DCLinuxAgent.zip"
   cd entrocim
   7z x $custcode'_DCLinuxAgent.zip' -aoa
   cd ..
