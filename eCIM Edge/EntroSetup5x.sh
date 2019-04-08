@@ -291,9 +291,118 @@ postrotate
     touch /var/log/entrocim.log
 endscript
 }' > /etc/logrotate.d/entrocim
-
 # start the service
 /etc/init.d/entrocim restart
+fi
+
+
+# Create OnChange Service restart on monitored lib/fan Folder
+
+echo '#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          Auto restart service on file change for EntroCIM
+# Required-Start:    $remote_fs $syslog $network
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+# /etc/init.d/onchange
+
+HomeFolder=/opt/entrocim
+
+StartCMD="sudo /home/entrocim/scripts/onchange.sh"
+
+PIDFile="/var/run/onchange.pid"
+LogFile="/var/log/onchange.log"
+# Touch the lock file
+touch $PIDFile
+
+# Determine user command
+case "$1" in
+  start)
+    echo "Starting OnChange"
+    CurPID=`cat $PIDFile`
+    if [ -z "$CurPID" ]; then
+       $StartCMD >> $LogFile 2>&1 &
+       echo $! > /var/run/onchange.pid
+       exit 0
+    else
+       echo OnChange runs with pid: $CurPID
+       echo type "/etc/init.d/onchange stop" to stop it first.
+       exit 1
+    fi
+    ;;
+  stop)
+    echo "Stopping OnChange"
+    CurPID=`cat $PIDFile`
+    if [ -z "$CurPID" ]; then
+       echo OnChange is already stopped.
+    else
+      kill $CurPID
+      rm $PIDFile
+    fi
+    ;;
+  restart)
+    echo "Restarting OnChange"
+    CurPID=`cat $PIDFile`
+    if [ -z "$CurPID" ]; then
+       $StartCMD >> $LogFile 2>&1 &
+       echo $! > /var/run/onchange.pid
+       echo OnChange is restarted.
+       exit 0
+    else
+      kill $CurPID
+      rm $PIDFile
+      $StartCMD >> $LogFile 2>&1 &
+      echo $! > /var/run/onchange.pid
+      echo OnChange is restarted.
+      exit 0
+    fi
+    ;;
+  status)
+    echo "OnChange"
+    CurPID=`cat $PIDFile`
+    if [ -z "$CurPID" ]; then
+       echo is stopped.
+       exit 3
+    else
+      echo is running.
+      exit 0
+    fi
+    ;;
+  *)
+    echo "Usage: /etc/init.d/onchange {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit 0' > /etc/init.d/onchange
+chmod 755 /etc/init.d/onchange
+
+# bind the service
+if [ -f "/usr/sbin/update-rc.d" ]; then
+    update-rc.d onchange defaults > /dev/null
+else
+    chkconfig --add onchange > /dev/null
+fi
+
+echo '/var/log/onchange.log {
+su root root
+minsize 10M
+weekly
+rotate 12
+compress
+delaycompress
+copytruncate
+postrotate
+    touch /var/log/onchange.log
+endscript
+}' > /etc/logrotate.d/onchange
+
+# start the service
+/etc/init.d/onchange restart
 fi
 
 exit 0
