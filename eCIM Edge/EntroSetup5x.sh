@@ -8,6 +8,8 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 #Set Vars
 HOSTNAME=$(hostname)
 NXTLINK="KeRmPnZSQyosmNM"
+NXTFOGLINK="3oiWJeBwtQFbHXM"
+
 clear
 
 echo "**********************************"
@@ -45,6 +47,7 @@ fi
 chown -R entrocim:entrocim "$install_path/"
 
 echo -n "Enter port EntroCIM runs on (8085): "
+echo ""
 read port
 
 if [ -z $port ]; then
@@ -52,11 +55,30 @@ if [ -z $port ]; then
 fi
 
 echo -n "Enter Java Heap Max Size for EntroCIM Service (512M): "
+echo ""
 read heapmax
 
 if [ -z $heapmax ]; then
   heapmax="512M"
 fi
+
+echo -n "Please Supply your EntroCIM FOG Enablement Customer Code (if applicable): "
+echo ""
+read CustCode
+
+if [ -z $custcode ]; then
+  fogenabled="n"
+else
+  fogenabled="y"
+fi
+
+echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
+echo ""
+read eCIMfw
+
+echo -n "Automatically run EntroCIM at startup (N/y): "
+echo ""
+read auto_start
 
 # Install latest Default-JRE, 7zip and htop
 echo "Installing EntroCIM pre-requisites..."
@@ -80,11 +102,18 @@ else
   fi
 fi
 
-
+#Set Java environment var
 if [ -z "${JAVA_HOME}" ]; then
   echo "Adding Java Home Environment"
   echo ""
-  echo 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;' >> /etc/environment
+  echo "JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;" >> /etc/environment
+fi
+
+#Set FOG environment var
+if [ $fogenabled == "y" ]; then
+  echo "Adding EntroCIM FOG Environment"
+  echo ""
+  echo "CUST_CODE=$custcode;" >> /etc/environment
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
@@ -113,6 +142,13 @@ else
   cd ..
   cp -R ~/entrocim/finstack/* $install_path/
   chown -R entrocim:entrocim $install_path/
+fi
+
+if [ $fogenabled == "y" ]; then
+  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTFOGLINK/$custcode'_DCLinuxAgent.zip'/download -O ~/entrocim/$custcode'_DCLinuxAgent.zip'
+  cd entrocim
+  7z x $custcode'_DCLinuxAgent.zip' -aoa
+  cd ..
 fi
 
 # Add Secured SSH Communications...
@@ -157,8 +193,6 @@ fi
 set +f
 
 #Create Firewall App Rule for EntroCIM
-echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
-read eCIMfw
 eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
 if [ $eCIMfw == "y" ]; then
   echo "Adding new ufw firewall app rule and enabling"
@@ -184,8 +218,6 @@ fi
 echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar:/lib/java/jline.jar: -Dfan.home=../ fanx.tools.Fan finStackHost  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x $install_path/bin/start.sh
 
-echo -n "Automatically run EntroCIM at startup (N/y): "
-read auto_start
 auto_start=`echo $auto_start | awk '{print tolower($0)}'`
 
 if [ $auto_start == "y" ]; then
