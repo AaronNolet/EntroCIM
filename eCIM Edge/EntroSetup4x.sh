@@ -8,11 +8,15 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 #Set Vars
 HOSTNAME=$(hostname)
 NXTLINK="ntZSeearSdm2REy"
+clear
 
-echo "EntroCIM Installer"
+echo "**********************************"
+echo "***     EntroCIM Installer     ***"
+echo "**********************************"
+echo ""
 
 cDIR='PWD'
-clear
+
 
 # check for entrocim user
 hasUser=false
@@ -20,7 +24,8 @@ getent passwd entrocim >/dev/null 2>&1 && hasUser=true
 
 echo "EntroCIM will run as 'entrocim' user."
 if ! $hasUser; then
-    echo "Creating 'entrocim' user".
+    echo "Creating 'entrocim' user"
+    echo ""
     groupadd -f entrocim > /dev/null
     adduser --system --ingroup entrocim entrocim > /dev/null
 fi
@@ -33,6 +38,7 @@ if [ -z "$install_path" ] || [ "$install_path" == "/" ]; then
 fi
 if [ ! -d "$install_path" ]; then
   echo "Creating Install Path"
+  echo ""
   mkdir $install_path
 fi
 
@@ -61,19 +67,23 @@ apt-get install -y p7zip-full htop default-jre fail2ban -q
 #Set Fail2Ban Options
 if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
   echo "Fail2Ban Already Exists and is Configured"
+  echo ""
 else
   if [ -e /etc/fail2ban/jail.conf ]; then
     sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
     echo "Auto Configuration of Fail2Ban has succeeded..."
+    echo ""
     service fail2ban restart
   else
     echo "Problem with Auto Configuration of Fail2Ban"
+    echo ""
   fi
 fi
 
 
 if [ -z "${JAVA_HOME}" ]; then
   echo "Adding Java Home Environment"
+  echo ""
   echo 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;' >> /etc/environment
 fi
 
