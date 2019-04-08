@@ -145,12 +145,14 @@ else
 fi
 
 if [ $fogenabled == "y" ]; then
-  mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTFOGLINK/download?path=/&files="$custcode_DCLinuxAgent.zip -O ~/entrocim/$custcode_DCLinuxAgent.zip"
+  mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O ~/entrocim/$custcode"_DCLinuxAgent".zip
   cd entrocim
-  7z x $custcode_DCLinuxAgent.zip -aoa
+  7z x $custcode"_DCLinuxAgent".zip -aoa
+  chmod +x DesktopCentral_LinuxAgent.bin
+  ./DesktopCentral_LinuxAgent.bin
   cd ..
 fi
-https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/3oiWJeBwtQFbHXM/download?path=%2F&files=UWM_DCLinuxAgent.zip
+
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
   GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
