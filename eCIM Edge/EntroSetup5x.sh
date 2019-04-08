@@ -110,7 +110,7 @@ if [ -z "${JAVA_HOME}" ]; then
 fi
 
 #Set FOG environment var
-if [ $fogenabled == "y" &&  -z "${CUST_CODE}" ]; then
+if [ $fogenabled == "y" ] && [ -z "${CUST_CODE}" ]; then
   echo "Adding EntroCIM FOG Environment"
   echo ""
   echo "CUST_CODE=$custcode" >> /etc/environment
