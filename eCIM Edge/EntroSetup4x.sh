@@ -56,7 +56,7 @@ fi
 echo "Installing EntroCIM pre-requisites..."
 echo ""
 
-apt-get install -y p7zip-full htop default-jre fail2ban
+apt-get install -y p7zip-full htop default-jre fail2ban -q
 
 #Set Fail2Ban Options
 if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
