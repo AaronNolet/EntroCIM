@@ -40,31 +40,31 @@ if [ -z "$install_path" ] || [ "$install_path" == "/" ]; then
 fi
 if [ ! -d "$install_path" ]; then
   echo "Creating Install Path"
+    mkdir $install_path
   echo ""
-  mkdir $install_path
 fi
 
 chown -R entrocim:entrocim "$install_path/"
 
 echo -n "Enter port EntroCIM runs on (8085): "
-echo ""
 read port
+echo ""
 
 if [ -z $port ]; then
     port="8085"
 fi
 
 echo -n "Enter Java Heap Max Size for EntroCIM Service (512M): "
-echo ""
 read heapmax
+echo ""
 
 if [ -z $heapmax ]; then
   heapmax="512M"
 fi
 
 echo -n "Please Supply your EntroCIM FOG Enablement Customer Code (if applicable): "
+read custcode
 echo ""
-read CustCode
 
 if [ -z $custcode ]; then
   fogenabled="n"
