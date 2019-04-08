@@ -302,8 +302,6 @@ echo '#!/bin/sh
 ### END INIT INFO
 # /etc/init.d/onchange
 
-HomeFolder=/opt/entrocim
-
 StartCMD="sudo /home/entrocim/scripts/onchange.sh"
 
 PIDFile="/var/run/onchange.pid"
