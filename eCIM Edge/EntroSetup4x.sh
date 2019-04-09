@@ -103,11 +103,11 @@ else
 fi
 
 #Set Java environment var
-if [ -z "${JAVA_HOME}" ]; then
-  echo "Adding Java Home Environment"
-  echo ""
-  echo "JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;" >> /etc/environment
-fi
+#if [ -z "${JAVA_HOME}" ]; then
+#  echo "Adding Java Home Environment"
+#  echo ""
+#  echo "JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;" >> /etc/environment
+#fi
 
 #Set FOG environment var
 if [ $fogenabled == "y" ] && [ -z "${CUST_CODE}" ]; then
