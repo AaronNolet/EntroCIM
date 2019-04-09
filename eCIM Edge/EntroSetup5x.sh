@@ -64,12 +64,10 @@ fi
 
 echo "Please Supply / Paste the Public SSH Key (if applicable): "
 read pkey
-echo ""
 
 if [ $pkey ]; then
   echo -n "Please Supply the Username that will be Used with the SSH Key: "
   read pkeyuser
-  echo ""
   if [ $pkeyuser ]; then
     echo "Adding Public Key to Administration User..."
     echo ""
