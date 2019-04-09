@@ -62,20 +62,19 @@ if [ -z $heapmax ]; then
   heapmax="512M"
 fi
 
-echo -n "Please Supply / Paste the Public SSH Key (if applicable): "
+#Add SSH Public Key for User Account
+echo "Please Supply / Paste the Public SSH Key (if applicable): "
 read pkey
-echo ""
 
-if [ $pkey ]; then
+if [ "$pkey" ]; then
   echo -n "Please Supply the Username that will be Used with the SSH Key: "
   read pkeyuser
-  echo ""
   if [ $pkeyuser ]; then
     echo "Adding Public Key to Administration User..."
     echo ""
     mkdir -p /home/$pkeyuser/.ssh
     echo "$pkey" >> /home/$pkeyuser/.ssh/authorized_keys
-    chown $pkeyuser:$pkeyuser /home/$pkeyuser/ && chmod 0400 /home/$pkeyuser/.ssh/authorized_keys
+    chown -R $pkeyuser:$pkeyuser /home/$pkeyuser/ && chmod 0400 /home/$pkeyuser/.ssh/authorized_keys
   fi
 fi
 

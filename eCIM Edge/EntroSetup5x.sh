@@ -62,6 +62,7 @@ if [ -z $heapmax ]; then
   heapmax="512M"
 fi
 
+#Add SSH Public Key for User Account
 echo "Please Supply / Paste the Public SSH Key (if applicable): "
 read pkey
 
