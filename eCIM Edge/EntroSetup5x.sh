@@ -65,7 +65,7 @@ fi
 echo "Please Supply / Paste the Public SSH Key (if applicable): "
 read pkey
 
-if [ $pkey ]; then
+if [ "$pkey" ]; then
   echo -n "Please Supply the Username that will be Used with the SSH Key: "
   read pkeyuser
   if [ $pkeyuser ]; then
