@@ -40,7 +40,7 @@ if [ -z "$install_path" ] || [ "$install_path" == "/" ]; then
 fi
 if [ ! -d "$install_path" ]; then
   echo "Creating Install Path"
-    mkdir $install_path
+  mkdir $install_path
   echo ""
 fi
 
@@ -335,6 +335,7 @@ postrotate
     touch /var/log/entrocim.log
 endscript
 }' > /etc/logrotate.d/entrocim
+
 # start the service
 /etc/init.d/entrocim restart
 fi
