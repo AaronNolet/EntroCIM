@@ -8,11 +8,17 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 #Set Vars
 HOSTNAME=$(hostname)
 NXTLINK="ntZSeearSdm2REy"
+NXTFOGLINK="3oiWJeBwtQFbHXM"
 
-echo "EntroCIM Installer"
+clear
+
+echo "**********************************"
+echo "***     EntroCIM Installer     ***"
+echo "**********************************"
+echo ""
 
 cDIR='PWD'
-clear
+
 
 # check for entrocim user
 hasUser=false
@@ -20,7 +26,8 @@ getent passwd entrocim >/dev/null 2>&1 && hasUser=true
 
 echo "EntroCIM will run as 'entrocim' user."
 if ! $hasUser; then
-    echo "Creating 'entrocim' user".
+    echo "Creating 'entrocim' user"
+    echo ""
     groupadd -f entrocim > /dev/null
     adduser --system --ingroup entrocim entrocim > /dev/null
 fi
@@ -34,12 +41,14 @@ fi
 if [ ! -d "$install_path" ]; then
   echo "Creating Install Path"
   mkdir $install_path
+  echo ""
 fi
 
 chown -R entrocim:entrocim "$install_path/"
 
 echo -n "Enter port EntroCIM runs on (8085): "
 read port
+echo ""
 
 if [ -z $port ]; then
     port="8085"
@@ -47,34 +56,80 @@ fi
 
 echo -n "Enter Java Heap Max Size for EntroCIM Service (512M): "
 read heapmax
+echo ""
 
 if [ -z $heapmax ]; then
   heapmax="512M"
 fi
 
+#Add SSH Public Key for User Account
+echo "Please Supply / Paste the Public SSH Key (if applicable): "
+read pkey
+
+if [ "$pkey" ]; then
+  echo -n "Please Supply the Username that will be Used with the SSH Key: "
+  read pkeyuser
+  if [ $pkeyuser ]; then
+    echo "Adding Public Key to Administration User..."
+    echo ""
+    mkdir -p /home/$pkeyuser/.ssh
+    echo "$pkey" >> /home/$pkeyuser/.ssh/authorized_keys
+    chown -R $pkeyuser:$pkeyuser /home/$pkeyuser/ && chmod 0400 /home/$pkeyuser/.ssh/authorized_keys
+  fi
+fi
+
+echo -n "Please Supply your EntroCIM FOG Enablement Customer Code (if applicable): "
+read custcode
+echo ""
+
+if [ -z $custcode ]; then
+  fogenabled="n"
+else
+  fogenabled="y"
+fi
+
+echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
+read eCIMfw
+echo ""
+
+echo -n "Automatically run EntroCIM at startup (N/y): "
+read auto_start
+echo ""
+
 # Install latest Default-JRE, 7zip and htop
 echo "Installing EntroCIM pre-requisites..."
 echo ""
 
-apt-get install -y p7zip-full htop default-jre fail2ban
+apt-get install -y p7zip-full htop default-jre fail2ban -q
 
 #Set Fail2Ban Options
 if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
   echo "Fail2Ban Already Exists and is Configured"
+  echo ""
 else
   if [ -e /etc/fail2ban/jail.conf ]; then
     sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
     echo "Auto Configuration of Fail2Ban has succeeded..."
+    echo ""
     service fail2ban restart
   else
     echo "Problem with Auto Configuration of Fail2Ban"
+    echo ""
   fi
 fi
 
+#Set Java environment var
+#if [ -z "${JAVA_HOME}" ]; then
+#  echo "Adding Java Home Environment"
+#  echo ""
+#  echo "JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;" >> /etc/environment
+#fi
 
-if [ -z "${JAVA_HOME}" ]; then
-  echo "Adding Java Home Environment"
-  echo 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;' >> /etc/environment
+#Set FOG environment var
+if [ $fogenabled == "y" ] && [ -z "${CUST_CODE}" ]; then
+  echo "Adding EntroCIM FOG Environment"
+  echo ""
+  echo "CUST_CODE=$custcode" >> /etc/environment
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
@@ -103,6 +158,15 @@ else
   cd ..
   cp -R ~/entrocim/finstack/* $install_path/
   chown -R entrocim:entrocim $install_path/
+fi
+
+if [ $fogenabled == "y" ]; then
+  mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O ~/entrocim/$custcode"_DCLinuxAgent".zip
+  cd entrocim
+  7z x $custcode"_DCLinuxAgent".zip -aoa
+  chmod +x DesktopCentral_LinuxAgent.bin
+  ./DesktopCentral_LinuxAgent.bin
+  cd ..
 fi
 
 # Add Secured SSH Communications...
@@ -147,8 +211,6 @@ fi
 set +f
 
 #Create Firewall App Rule for EntroCIM
-echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? (N/y): "
-read eCIMfw
 eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
 if [ $eCIMfw == "y" ]; then
   echo "Adding new ufw firewall app rule and enabling"
@@ -165,8 +227,6 @@ fi
 echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan proj -port $port  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x $install_path/bin/start.sh
 
-echo -n "Automatically run EntroCIM at startup (N/y): "
-read auto_start
 auto_start=`echo $auto_start | awk '{print tolower($0)}'`
 
 if [ $auto_start == "y" ]; then
@@ -286,5 +346,112 @@ endscript
 # start the service
 /etc/init.d/entrocim restart
 fi
+
+
+# Create OnChange Service restart on monitored lib/fan Folder
+
+echo '#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          Auto restart service on file change for EntroCIM
+# Required-Start:    $remote_fs $syslog $network
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+# /etc/init.d/onchange
+
+StartCMD="sudo /home/entrocim/scripts/onchange.sh"
+
+PIDFile="/var/run/onchange.pid"
+LogFile="/var/log/onchange.log"
+# Touch the lock file
+touch $PIDFile
+
+# Determine user command
+case "$1" in
+  start)
+    echo "Starting OnChange"
+    CurPID=`cat $PIDFile`
+    if [ -z "$CurPID" ]; then
+       $StartCMD >> $LogFile 2>&1 &
+       echo $! > /var/run/onchange.pid
+       exit 0
+    else
+       echo OnChange runs with pid: $CurPID
+       echo type "/etc/init.d/onchange stop" to stop it first.
+       exit 1
+    fi
+    ;;
+  stop)
+    echo "Stopping OnChange"
+    CurPID=`cat $PIDFile`
+    if [ -z "$CurPID" ]; then
+       echo OnChange is already stopped.
+    else
+      kill $CurPID
+      rm $PIDFile
+    fi
+    ;;
+  restart)
+    echo "Restarting OnChange"
+    CurPID=`cat $PIDFile`
+    if [ -z "$CurPID" ]; then
+       $StartCMD >> $LogFile 2>&1 &
+       echo $! > /var/run/onchange.pid
+       echo OnChange is restarted.
+       exit 0
+    else
+      kill $CurPID
+      rm $PIDFile
+      $StartCMD >> $LogFile 2>&1 &
+      echo $! > /var/run/onchange.pid
+      echo OnChange is restarted.
+      exit 0
+    fi
+    ;;
+  status)
+    echo "OnChange"
+    CurPID=`cat $PIDFile`
+    if [ -z "$CurPID" ]; then
+       echo is stopped.
+       exit 3
+    else
+      echo is running.
+      exit 0
+    fi
+    ;;
+  *)
+    echo "Usage: /etc/init.d/onchange {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit 0' > /etc/init.d/onchange
+chmod 755 /etc/init.d/onchange
+
+# bind the service
+if [ -f "/usr/sbin/update-rc.d" ]; then
+    update-rc.d onchange defaults > /dev/null
+else
+    chkconfig --add onchange > /dev/null
+fi
+
+echo '/var/log/onchange.log {
+su root root
+minsize 10M
+weekly
+rotate 12
+compress
+delaycompress
+copytruncate
+postrotate
+    touch /var/log/onchange.log
+endscript
+}' > /etc/logrotate.d/onchange
+
+# start the service
+/etc/init.d/onchange restart
 
 exit 0
