@@ -73,7 +73,7 @@ if [ "$pkey" ]; then
     echo ""
     mkdir -p /home/$pkeyuser/.ssh
     echo "$pkey" >> /home/$pkeyuser/.ssh/authorized_keys
-    chown $pkeyuser:$pkeyuser /home/$pkeyuser/ && chmod 0400 /home/$pkeyuser/.ssh/authorized_keys
+    chown -R $pkeyuser:$pkeyuser /home/$pkeyuser/ && chmod 0400 /home/$pkeyuser/.ssh/authorized_keys
   fi
 fi
 
