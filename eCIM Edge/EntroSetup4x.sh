@@ -188,7 +188,7 @@ fi
 
 restore_backup=`echo $restore_backup | awk '{print tolower($0)}'`
 if [ -z $restore_backup ] || [ $restore_backup == "n" ]; then
-
+  echo "No Backup Restore Required..."
 else
     if [ -z $install_path ] || [ $install_path == "/" ]; then
         echo "Invalid install path. Terminating"
