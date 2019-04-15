@@ -160,6 +160,46 @@ else
   chown -R entrocim:entrocim $install_path/
 fi
 
+#Backup existing Install if exists...
+if [ -d "$install_path" ]; then
+    echo "Install path '$install_path' already exists."
+    echo -n "Continue and use existing path? (N/y):"
+    read next
+    next=`echo $next | awk '{print tolower($0)}'`
+    if [ -z $next ] || [ $next == "n" ]; then
+        exit 0
+    else
+        # backup existing folder
+        now=$(date "+%Y.%m.%d-%H.%M.%S")
+        backupfolder="${install_path}_backup_${now}"
+        # stop the process here
+        /etc/init.d/entrocim stop > /dev/null || true
+        mv -f "$install_path" "$backupfolder"
+        echo "A backup copy was created in '$backupfolder'"
+    fi
+fi
+
+restore_backup="n"
+if [ -n "$backupfolder" ]; then
+    echo -n "Restore settings and projects from previous installation (N/y)?"
+    read restore_backup
+fi
+
+restore_backup=`echo $restore_backup | awk '{print tolower($0)}'`
+if [ -z $restore_backup ] || [ $restore_backup == "n" ]; then
+
+else
+    if [ -z $install_path ] || [ $install_path == "/" ]; then
+        echo "Invalid install path. Terminating"
+        exit 1
+    fi
+    rm -f -R "$install_path/etc/"
+    rm -f -R "$install_path/db/"
+    mv -f "$backupfolder/etc/" "$install_path/etc/"
+    mv -f "$backupfolder/db/" "$install_path/db/"
+    rm -f -R "$backupfolder"
+fi
+
 if [ $fogenabled == "y" ]; then
   mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O ~/entrocim/$custcode"_DCLinuxAgent".zip
   cd entrocim
