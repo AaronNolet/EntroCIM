@@ -199,7 +199,7 @@ else
     rm -f -R "$install_path/db/"
     mv -f "$backupfolder/etc/" "$install_path/etc/"
     mv -f "$backupfolder/db/" "$install_path/db/"
-    rm -f -R "$backupfolder"
+    # rm -f -R "$backupfolder"
 fi
 
 if [ $fogenabled == "y" ]; then
