@@ -186,7 +186,7 @@ else
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
-  cp -R ~/entrocim/finstack/* $install_path/
+  cp -R -p ~/entrocim/finstack/* $install_path/
   chown -R entrocim:entrocim $install_path/
 fi
 
