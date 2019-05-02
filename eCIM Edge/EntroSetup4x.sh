@@ -45,15 +45,15 @@ if [ -d "$install_path" ]; then
     read next
     next=`echo $next | awk '{print tolower($0)}'`
     if [ -z $next ] || [ $next == "n" ]; then
-        exit 0
+      exit 0
     else
-        # backup existing folder
-        now=$(date "+%Y.%m.%d-%H.%M.%S")
-        backupfolder="${install_path}_backup_${now}"
-        # stop the process here
-        /etc/init.d/entrocim stop > /dev/null || true
-        mv -f "$install_path" "$backupfolder"
-        echo "A backup copy was created in '$backupfolder'"
+      # backup existing folder
+      now=$(date "+%Y.%m.%d-%H.%M.%S")
+      backupfolder="${install_path}_backup_${now}"
+      # stop the process here
+      /etc/init.d/entrocim stop > /dev/null || true
+      mv -f "$install_path" "$backupfolder"
+      echo "A backup copy was created in '$backupfolder'"
     fi
 fi
 
@@ -186,7 +186,7 @@ else
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
-  cp -R -p ~/entrocim/finstack/* $install_path/
+  cp -Rp ~/entrocim/finstack/* $install_path/
   chown -R entrocim:entrocim $install_path/
 fi
 
