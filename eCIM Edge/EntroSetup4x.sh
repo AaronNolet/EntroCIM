@@ -58,9 +58,13 @@ if [ -d "$install_path" ]; then
 fi
 
 restore_backup="n"
+restore_pods="n"
+
 if [ -n "$backupfolder" ]; then
     echo -n "Restore settings and projects from previous installation (N/y)?"
     read restore_backup
+    echo -n "Migrate PODs that are missing / newer from previous installation (N/y)?"
+    read restore_pods
 fi
 
 #Create Install Path
@@ -197,10 +201,22 @@ else
     fi
     rm -f -R "$install_path/etc/"
     rm -f -R "$install_path/db/"
-    mv -f "$backupfolder/etc/" "$install_path/etc/"
-    mv -f "$backupfolder/db/" "$install_path/db/"
-    # rm -f -R "$backupfolder"
+    echo "Restoring settings and projects from previous installation"
+    echo ""
+    mv -f -v "$backupfolder/etc/" "$install_path/etc/"
+    mv -f -v "$backupfolder/db/" "$install_path/db/"
+    echo ""
     echo "Settings and projects from previous installation have been restored..."
+    if [ -z $restore_pods ] || [ $restore_pods == "n" ]; then
+      echo "Not migrating PODs from previous intallation..."
+    else
+      echo "Restoring PODs from previous intallation..."
+      echo ""
+      mv -f -u -v "$backupfolder/lib/fan/" "$install_path/lib/fan/"
+      echo ""
+      echo "PODs from previous installation have been migrated..."
+    fi
+    # rm -f -R "$backupfolder"
 fi
 
 if [ $fogenabled == "y" ]; then
