@@ -200,6 +200,7 @@ else
     mv -f "$backupfolder/etc/" "$install_path/etc/"
     mv -f "$backupfolder/db/" "$install_path/db/"
     # rm -f -R "$backupfolder"
+    echo "Settings and projects from previous installation have been restored..."
 fi
 
 if [ $fogenabled == "y" ]; then
