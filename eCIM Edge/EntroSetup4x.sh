@@ -178,7 +178,7 @@ read eCIMget
     cd entrocim
     7z x EntroCIM.zip -aoa
     cd ..
-    mv -f -v "~/entrocim/finstack" "$install_path/"
+    mv -f -v "~/entrocim/finstack/" "$install_path/"
     chown -R entrocim:entrocim $install_path/
   fi
 else
@@ -186,7 +186,7 @@ else
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
-  mv -f -v "~/entrocim/finstack" "$install_path/"
+  mv -f -v "~/entrocim/finstack/" "$install_path/"
   chown -R entrocim:entrocim $install_path/
 fi
 
