@@ -7,7 +7,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 
 #Set Vars
 HOSTNAME=$(hostname)
-NXTLINK="KeRmPnZSQyosmNM"
+NXTLINK="WBKTP8WxcZAi4Lx"
 NXTFOGLINK="3oiWJeBwtQFbHXM"
 
 clear
