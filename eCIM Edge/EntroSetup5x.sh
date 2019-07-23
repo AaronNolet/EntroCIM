@@ -9,6 +9,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 HOSTNAME=$(hostname)
 NXTLINK="WBKTP8WxcZAi4Lx"
 NXTFOGLINK="3oiWJeBwtQFbHXM"
+extract_folder="EntroCIM"
 
 clear
 
@@ -148,7 +149,7 @@ read eCIMget
     cd entrocim
     7z x EntroCIM.zip -aoa
     cd ..
-    cp -R ~/entrocim/finstack/* $install_path/
+    cp -R ~/entrocim/$extract_folder/* $install_path/
     chown -R entrocim:entrocim $install_path/
   fi
 else
@@ -156,7 +157,7 @@ else
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
-  cp -R ~/entrocim/finstack/* $install_path/
+  cp -R ~/entrocim/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
 fi
 
