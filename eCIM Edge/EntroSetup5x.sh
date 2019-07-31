@@ -7,7 +7,10 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 
 #Set Vars
 HOSTNAME=$(hostname)
-NXTLINK="WBKTP8WxcZAi4Lx"
+#EntroCIM NXTLINK Versions:
+# 5.0.2156 "WBKTP8WxcZAi4Lx"
+# 5.0.2043 "iYetpysixzTPcYQ"
+NXTLINK="iYetpysixzTPcYQ"
 NXTFOGLINK="3oiWJeBwtQFbHXM"
 extract_folder="EntroCIM"
 
