@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # check for iotctl user
+encps=samssg884KfJw
 hasUser=false
 getent passwd iotctl >/dev/null 2>&1 && hasUser=true
 
@@ -9,8 +10,8 @@ if ! $hasUser; then
     echo "User does not exist..."
     echo "Creating 'iotctl' user"
     echo ""
-    groupadd -f iotctl > /dev/null
-    adduser --system --ingroup iotctl iotctl > /dev/null
+    #groupadd -f iotctl > /dev/null
+    useradd -m -p $encps iotctl
     mkdir /home/iotctl/.ssh
     touch /home/iotctl/.ssh/authorized_keys
     chown iotctl:iotctl /home/iotctl/ -R
