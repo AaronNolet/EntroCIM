@@ -1,6 +1,6 @@
 #!/bin/bash
 SVCNAME="entrocim.service"
-echo -e "\nWritting File Audits... \n\n"
+echo -e "\n`date`\nWritting File Audits... \n\n"
 
 sudo systemctl status $SVCNAME >> ~/tmp.log
 
