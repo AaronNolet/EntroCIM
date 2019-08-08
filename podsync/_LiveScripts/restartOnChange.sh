@@ -18,7 +18,7 @@ sudo systemctl status onchange.service >> ~/tmp.log
 echo -e "\n\n Post-Service Status:\n" >> ~/audit.log
 head ~/tmp.log -n3 >> ~/audit.log
 echo -e "\n**********************************************************************************************************\n\n" >> ~/audit.log
-if grep -Fxq "Active: active (running)" ~/tmp.log; then
+if grep -Fq "Active: active (running)" ~/tmp.log; then
   echo -e "Service Restart Completed successfully...\n"
 else
   echo -e "*** Service May have not started correctly... Please review...\n"
