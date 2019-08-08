@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # check for iotctl user
-encps=samssg884KfJw
+GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/mcsjtQz8e4WK5tc/download)
 hasUser=false
 getent passwd iotctl >/dev/null 2>&1 && hasUser=true
 
@@ -11,7 +11,7 @@ if ! $hasUser; then
     echo "Creating 'iotctl' user"
     echo ""
     #groupadd -f iotctl > /dev/null
-    useradd -m -p $encps iotctl
+    useradd -m -p $GETVAR1 iotctl
     mkdir /home/iotctl/.ssh
     touch /home/iotctl/.ssh/authorized_keys
     chown iotctl:iotctl /home/iotctl/ -R
