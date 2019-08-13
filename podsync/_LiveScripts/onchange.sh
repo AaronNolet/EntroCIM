@@ -19,7 +19,6 @@ elif systemctl cat entrocim.service > /dev/null 2>&1; then
 fi
 
 PIDFile="/var/run/$PIDname"
-CurPID=$(<"$PIDFile")
 
 # ******************************************************
 # * Monitor Fan Folder for changes and Restart Service *
@@ -28,6 +27,7 @@ CurPID=$(<"$PIDFile")
 ls -l $FolderMonitor > /tmp/watchfile
 
 while true; do
+CurPID=$(cat $PIDFile)
 sleep 10
 ls -l $FolderMonitor > /tmp/watchfile2
 diff -q /tmp/watchfile /tmp/watchfile2 > /dev/null
@@ -47,7 +47,6 @@ if [ $? -ne 0 ] ; then
     service skyspark start
     echo "Completed..."
   elif [ "$SkyFin" == "eCIM" ]; then
-    echo "$PIDFile ($CurPID)" > /tmp/PIDlog.log
     echo date '+%d/%m/%Y %H:%M:%S'
     echo "Restarting EntroCIM Service"
     service entrocim stop
@@ -55,6 +54,7 @@ if [ $? -ne 0 ] ; then
     service entrocim start
     echo "Completed..."
   fi
+  echo "$PIDFile - $CurPID" > /tmp/PIDlog.log
 fi
 cp /tmp/watchfile2 /tmp/watchfile
 done
