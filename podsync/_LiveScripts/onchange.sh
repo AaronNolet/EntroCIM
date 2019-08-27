@@ -36,21 +36,21 @@ if [ $? -ne 0 ] ; then
     echo date '+%d/%m/%Y %H:%M:%S'
     echo "Restarting finstack Service"
     service finstack stop
-    wait $CurPID
+    sleep 10
     service finstack start
     echo "Completed..."
   elif [ "$SkyFin" == "Sky" ]; then
     echo date '+%d/%m/%Y %H:%M:%S'
     echo "Restarting skyspark Service"
     service skyspark stop
-    wait $CurPID
+    sleep 10
     service skyspark start
     echo "Completed..."
   elif [ "$SkyFin" == "eCIM" ]; then
     echo date '+%d/%m/%Y %H:%M:%S'
     echo "Restarting EntroCIM Service"
     service entrocim stop
-    wait $CurPID
+    sleep 10
     service entrocim start
     echo "Completed..."
   fi
