@@ -28,7 +28,7 @@ fi
 if /usr/bin/ssh -i $HOME/.ssh/id_rsa IoT_POD_Update@podupdate.iotwarez.com '[ -d /volume1/podsync/_backups/$HOSTNAME ]'; then
   /usr/bin/rsync -vh $BACKFILE -e --delete-after --log-file=/tmp/rsync.log "/usr/bin/ssh -i $HOME/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_backups/$HOSTNAME/
 else
-  /usr/bin/ssh -i $HOME/.ssh/id_rsa IoT_POD_Update@podupdate.iotwarez.com "sudo mkdir /volume1/podsync/_backups/$HOSTNAME"
+  /usr/bin/ssh -i $HOME/.ssh/id_rsa IoT_POD_Update@podupdate.iotwarez.com "mkdir /volume1/podsync/_backups/$HOSTNAME"
   /usr/bin/rsync -vh $BACKFILE -e --delete-after --log-file=/tmp/rsync.log "/usr/bin/ssh -i $HOME/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_backups/$HOSTNAME/
 fi
 
