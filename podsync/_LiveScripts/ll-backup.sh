@@ -17,7 +17,7 @@ diff -q $LOGLOC/latestsnap.log $LOGLOC/priorsnap.log > /dev/null
 if [ $? -ne 0 ] ; then
   cp $LATESTSNAP $LOGLOC/$BACKFILE
   cd $LOGLOC
-  bash ~/cloudsend.sh $BACKFILE $BACKDEST
+  bash /home/hepta/cloudsend.sh $BACKFILE $BACKDEST
   cd $PWD
   cat $LOGLOC/latestsnap.log > $LOGLOC/priorsnap.log
 fi
