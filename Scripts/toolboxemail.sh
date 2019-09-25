@@ -1,7 +1,7 @@
 #!/bin/bash
 
 recipient="s.clark@heptasystems.com,a.nolet@heptasystems.com"
-sender="helpdesk@heptasystems.com"
+sender="toolbox@heptasystems.com"
 ffolder="Toolbox_Topics"
 rndmatt=$( ls $HOME/scripts/Toolbox_Topics/*.pdf | sed 's#.*/##' | shuf -n 1 )
 DATE=`date +%A", "%B" "%d", "%Y`
