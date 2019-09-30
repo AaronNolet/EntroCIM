@@ -7,8 +7,15 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 
 #Set Vars
 HOSTNAME=$(hostname)
-NXTLINK="n6xSKJknC9jBgNd"
+#EntroCIM NXTLINK Versions:
+# 5.0.2276 "n8m2PzRSLmiMrap"
+# 5.0.2156 "WBKTP8WxcZAi4Lx"
+# 5.0.2043 "iYetpysixzTPcYQ"
+NXTLINK="n8m2PzRSLmiMrap"
+
+# FOG Code during install needs to match with case start of file followed by _DCLinuxAgent.zip
 NXTFOGLINK="3oiWJeBwtQFbHXM"
+extract_folder="EntroCIM"
 
 clear
 
@@ -148,7 +155,7 @@ read eCIMget
     cd entrocim
     7z x EntroCIM.zip -aoa
     cd ..
-    cp -R ~/entrocim/finstack/* $install_path/
+    cp -R ~/entrocim/$extract_folder/* $install_path/
     chown -R entrocim:entrocim $install_path/
   fi
 else
@@ -156,7 +163,7 @@ else
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
-  cp -R ~/entrocim/finstack/* $install_path/
+  cp -R ~/entrocim/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
 fi
 

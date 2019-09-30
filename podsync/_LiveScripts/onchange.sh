@@ -7,13 +7,18 @@
 if systemctl cat skyspark.service > /dev/null 2>&1; then
   FolderMonitor=$(systemctl cat skyspark.service |grep WorkingDirectory=/|sed 's/WorkingDirectory=//')/lib/fan/
   SkyFin=Sky
+  PIDname="skyspark.pid"
 elif systemctl cat finstack.service > /dev/null 2>&1; then
   FolderMonitor=$(cat /etc/init.d/finstack |grep HomeFolder=/|sed 's/HomeFolder=//')/lib/fan/
   SkyFin=Fin
+  PIDname="finstack.pid"
 elif systemctl cat entrocim.service > /dev/null 2>&1; then
   FolderMonitor=$(cat /etc/init.d/entrocim |grep HomeFolder=/|sed 's/HomeFolder=//')/lib/fan/
   SkyFin=eCIM
+  PIDname="entrocim.pid"
 fi
+
+PIDFile="/var/run/$PIDname"
 
 # ******************************************************
 # * Monitor Fan Folder for changes and Restart Service *
@@ -22,6 +27,7 @@ fi
 ls -l $FolderMonitor > /tmp/watchfile
 
 while true; do
+CurPID=$(cat $PIDFile)
 sleep 10
 ls -l $FolderMonitor > /tmp/watchfile2
 diff -q /tmp/watchfile /tmp/watchfile2 > /dev/null
@@ -48,6 +54,7 @@ if [ $? -ne 0 ] ; then
     service entrocim start
     echo "Completed..."
   fi
+  echo "$PIDFile - $CurPID" > /tmp/PIDlog.log
 fi
 cp /tmp/watchfile2 /tmp/watchfile
 done

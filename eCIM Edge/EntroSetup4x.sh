@@ -34,10 +34,40 @@ fi
 
 echo -n "Enter location for EntroCIM (/opt/entrocim): "
 read install_path
-
 if [ -z "$install_path" ] || [ "$install_path" == "/" ]; then
     install_path="/opt/entrocim"
 fi
+
+#Backup existing Install if exists...
+if [ -d "$install_path" ]; then
+    echo "Install path '$install_path' already exists."
+    echo -n "Continue and use existing path? (N/y):"
+    read next
+    next=`echo $next | awk '{print tolower($0)}'`
+    if [ -z $next ] || [ $next == "n" ]; then
+      exit 0
+    else
+      # backup existing folder
+      now=$(date "+%Y.%m.%d-%H.%M.%S")
+      backupfolder="${install_path}_backup_${now}"
+      # stop the process here
+      /etc/init.d/entrocim stop > /dev/null || true
+      mv -f "$install_path" "$backupfolder"
+      echo "A backup copy was created in '$backupfolder'"
+    fi
+fi
+
+restore_backup="n"
+restore_pods="n"
+
+if [ -n "$backupfolder" ]; then
+    echo -n "Restore settings and projects from previous installation (N/y)?"
+    read restore_backup
+    echo -n "Migrate PODs that are missing / newer from previous installation (N/y)?"
+    read restore_pods
+fi
+
+#Create Install Path
 if [ ! -d "$install_path" ]; then
   echo "Creating Install Path"
   mkdir $install_path
@@ -148,7 +178,7 @@ read eCIMget
     cd entrocim
     7z x EntroCIM.zip -aoa
     cd ..
-    cp -R ~/entrocim/finstack/* $install_path/
+    mv -f -v "$cDIR/entrocim/finstack/" "$install_path/"
     chown -R entrocim:entrocim $install_path/
   fi
 else
@@ -156,8 +186,37 @@ else
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
-  cp -R ~/entrocim/finstack/* $install_path/
+  mv -f -v "$cDIR/entrocim/finstack/" "$install_path/"
   chown -R entrocim:entrocim $install_path/
+fi
+
+restore_backup=`echo $restore_backup | awk '{print tolower($0)}'`
+
+if [ -z $restore_backup ] || [ $restore_backup == "n" ]; then
+  echo "No Backup Restore Required..."
+else
+    if [ -z $install_path ] || [ $install_path == "/" ]; then
+        echo "Invalid install path. Terminating"
+        exit 1
+    fi
+    rm -f -R "$install_path/etc/"
+    rm -f -R "$install_path/db/"
+    echo "Restoring settings and projects from previous installation"
+    echo ""
+    mv -f -v "$backupfolder/etc/" "$install_path/etc/"
+    mv -f -v "$backupfolder/db/" "$install_path/db/"
+    echo ""
+    echo "Settings and projects from previous installation have been restored..."
+    if [ -z $restore_pods ] || [ $restore_pods == "n" ]; then
+      echo "Not migrating PODs from previous intallation..."
+    else
+      echo "Restoring PODs from previous intallation..."
+      echo ""
+      mv -f -u -v "$backupfolder/lib/fan/" "$install_path/lib/fan/"
+      echo ""
+      echo "PODs from previous installation have been migrated..."
+    fi
+    # rm -f -R "$backupfolder"
 fi
 
 if [ $fogenabled == "y" ]; then
