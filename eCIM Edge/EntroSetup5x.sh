@@ -53,12 +53,12 @@ fi
 
 chown -R entrocim:entrocim "$install_path/"
 
-echo -n "Enter port EntroCIM runs on (8085): "
+echo -n "Enter port EntroCIM runs on (8080): "
 read port
 echo ""
 
 if [ -z $port ]; then
-    port="8085"
+    port="8080"
 fi
 
 echo -n "Enter Java Heap Max Size for EntroCIM Service (512M): "
