@@ -6,6 +6,9 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
 
 #Set Vars
+export http_proxy=http://gwwcfproxy.gwl.bz:8080
+export https_proxy=https://gwwcfproxy.gwl.bz:8443
+
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
 # 5.0.2276 "n8m2PzRSLmiMrap"
