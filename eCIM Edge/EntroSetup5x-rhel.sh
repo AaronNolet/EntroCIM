@@ -140,7 +140,7 @@ if [ $fogenabled == "y" ] && [ -z "${CUST_CODE}" ]; then
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
-if [ -e ~/entrocim/EntroCIM.zip ]; then
+if [ -e $cDIR/entrocim/EntroCIM.zip ]; then
 echo -n "Would you like to retrieve the Latest EntroCIM installer (N/y): "
 read eCIMget
 
@@ -151,24 +151,24 @@ read eCIMget
   eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
 
   if [ $eCIMget == "y" ]; then
-    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
+    mkdir -p $cDIR/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $cDIR/entrocim/EntroCIM.zip
     cd entrocim
     unzip EntroCIM.zip
     cd ..
-    cp -R ~/entrocim/$extract_folder/* $install_path/
+    cp -R $cDIR/entrocim/$extract_folder/* $install_path/
     chown -R entrocim:entrocim $install_path/
   fi
 else
-  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
+  mkdir -p $cDIR/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $cDIR/entrocim/EntroCIM.zip
   cd entrocim
   unzip EntroCIM.zip
   cd ..
-  cp -R ~/entrocim/$extract_folder/* $install_path/
+  cp -R $cDIR/entrocim/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
 fi
 
 if [ $fogenabled == "y" ]; then
-  mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O ~/entrocim/$custcode"_DCLinuxAgent".zip
+  mkdir -p $cDIR/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O $cDIR/entrocim/$custcode"_DCLinuxAgent".zip
   cd entrocim
   7z x $custcode"_DCLinuxAgent".zip -aoa
   chmod +x DesktopCentral_LinuxAgent.bin
@@ -179,7 +179,7 @@ fi
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
   GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/wJTCfg5GAFqGfGt/download -O ~/entrocim/podupdate-noaes.zip
+  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/wJTCfg5GAFqGfGt/download -O $cDIR/entrocim/podupdate-noaes.zip
   cd entrocim
   unzip -jP $GETVAR1 podupdate-noaes.zip
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
