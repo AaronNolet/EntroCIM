@@ -200,7 +200,7 @@ if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /
 else
   if [ ! -f /var/spool/cron/entrocim ]; then
     echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/entrocim
-    chown entrocim:crontab /var/spool/cron/entrocim
+    chown entrocim:entrocim /var/spool/cron/entrocim
     chmod 600 /var/spool/cron/entrocim
   fi
 fi
