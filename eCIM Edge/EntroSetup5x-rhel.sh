@@ -176,34 +176,34 @@ if [ $fogenabled == "y" ]; then
 fi
 
 # Add Secured SSH Communications...
-if [ ! -f /etc/cron.allow ]; then
-  GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/wJTCfg5GAFqGfGt/download -O $cDIR/entrocim/podupdate-noaes.zip
-  cd entrocim
-  unzip -jP $GETVAR1 podupdate-noaes.zip
-  mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
-  cp podupdate.log /home/entrocim/.ssh/id_rsa
-  rm podupdate.log podupdate.zip
-  chown -R entrocim:entrocim /home/entrocim/ && chmod 0400 /home/entrocim/.ssh/id_rsa
-  rsync -rltvhz -e "/usr/bin/ssh -o StrictHostKeyChecking=no -i /home/entrocim/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_info/updatescripts.sh /home/entrocim/IoT_Warez/  &&  chown -R entrocim:entrocim /home/entrocim/ && cp /root/.ssh/known_hosts /home/entrocim/.ssh/
-  echo -e 'entrocim' > /etc/cron.allow
-  sudo -H -u entrocim bash -c /home/entrocim/IoT_Warez/updatescripts.sh
-  sudo -H -u entrocim bash -c "/home/entrocim/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; /home/entrocim/scripts/sendlog.sh"
-fi
+#if [ ! -f /etc/cron.allow ]; then
+#  GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
+#  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/wJTCfg5GAFqGfGt/download -O $cDIR/entrocim/podupdate-noaes.zip
+#  cd $cDIR/entrocim
+#  unzip -jP $GETVAR1 podupdate-noaes.zip
+#  mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
+#  cp podupdate.log /home/entrocim/.ssh/id_rsa
+#  rm podupdate.log podupdate-noaes.zip
+#  chown -R entrocim:entrocim /home/entrocim/ && chmod 0400 /home/entrocim/.ssh/id_rsa
+#  rsync -rltvhz -e "/usr/bin/ssh -o StrictHostKeyChecking=no -i /home/entrocim/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_info/updatescripts.sh /home/entrocim/IoT_Warez/  &&  chown -R entrocim:entrocim /home/entrocim/ && cp /root/.ssh/known_hosts /home/entrocim/.ssh/
+#  echo -e 'entrocim' > /etc/cron.allow
+#  sudo -H -u entrocim bash -c /home/entrocim/IoT_Warez/updatescripts.sh
+#  sudo -H -u entrocim bash -c "/home/entrocim/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; /home/entrocim/scripts/sendlog.sh"
+#fi
 
 #Add Cron Jobs for entrocim and root users
-set -f
-ECRON=$'05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME\'_podupdate_\'`date \'+\%b-\%d-\%Y\'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC'
+#set -f
+#ECRON=$'05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME\'_podupdate_\'`date \'+\%b-\%d-\%Y\'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC'
 #RCRON=$'00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
-if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /tmp/\$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; \$HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim; then
-  echo "Automatic Updates are already enabled..."
-else
-  if [ ! -f /var/spool/cron/entrocim ]; then
-    echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/entrocim
-    chown entrocim:entrocim /var/spool/cron/entrocim
-    chmod 600 /var/spool/cron/entrocim
-  fi
-fi
+#if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /tmp/\$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; \$HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim; then
+#  echo "Automatic Updates are already enabled..."
+#else
+#  if [ ! -f /var/spool/cron/entrocim ]; then
+#    echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/entrocim
+#    chown entrocim:entrocim /var/spool/cron/entrocim
+#    chmod 600 /var/spool/cron/entrocim
+#  fi
+#fi
 
 #if grep -Fqs "/home/entrocim/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
 #  echo "Automatic Updates are already enabled..."
@@ -214,7 +214,7 @@ fi
 #    chmod 600 /var/spool/cron/crontabs/root
 #  fi
 #fi
-set +f
+#set +f
 
 #Create Firewall App Rule for EntroCIM
 eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
