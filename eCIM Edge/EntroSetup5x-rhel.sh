@@ -24,10 +24,9 @@ echo "***     EntroCIM Installer     ***"
 echo "**********************************"
 echo ""
 
-cDIR='PWD'
+cDIR=$(pwd)
 
-
-# check for entrocim user
+cd # check for entrocim user
 hasUser=false
 getent passwd entrocim >/dev/null 2>&1 && hasUser=true
 
@@ -36,7 +35,7 @@ if ! $hasUser; then
     echo "Creating 'entrocim' user"
     echo ""
     groupadd -f entrocim > /dev/null
-    adduser --system -G entrocim entrocim > /dev/null
+    adduser --system -g entrocim entrocim > /dev/null
 fi
 
 echo -n "Enter location for EntroCIM (/opt/entrocim): "
@@ -195,14 +194,14 @@ fi
 #Add Cron Jobs for entrocim and root users
 set -f
 ECRON=$'05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME\'_podupdate_\'`date \'+\%b-\%d-\%Y\'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC'
-RCRON=$'00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
+#RCRON=$'00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
 if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /tmp/\$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; \$HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim; then
   echo "Automatic Updates are already enabled..."
 else
-  if [ ! -f /var/spool/cron/crontabs/entrocim ]; then
-    echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/crontabs/entrocim
-    chown entrocim:crontab /var/spool/cron/crontabs/entrocim
-    chmod 600 /var/spool/cron/crontabs/entrocim
+  if [ ! -f /var/spool/cron/entrocim ]; then
+    echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/entrocim
+    chown entrocim:crontab /var/spool/cron/entrocim
+    chmod 600 /var/spool/cron/entrocim
   fi
 fi
 
