@@ -8,11 +8,11 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 #Set Vars
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
-# 5.0.3.2674_FoS "QGC6DJLrc8PjrRX"
+# 5.0.3.2674_FoS "rfECRBNHnSqEGik"
 # 5.0.2276 "n8m2PzRSLmiMrap"
 # 5.0.2156 "WBKTP8WxcZAi4Lx"
 # 5.0.2043 "iYetpysixzTPcYQ"
-NXTLINK="QGC6DJLrc8PjrRX"
+NXTLINK="rfECRBNHnSqEGik"
 
 # FOG Code during install needs to match with case start of file followed by _DCLinuxAgent.zip
 NXTFOGLINK="3oiWJeBwtQFbHXM"
