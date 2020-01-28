@@ -6,14 +6,15 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
 
 #Set Vars
+export http_proxy=http://gwwcfproxy.gwl.bz:8080
+export https_proxy=https://gwwcfproxy.gwl.bz:8443
+
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
-# 5.0.3.2725_Fos "EMBWzHeYNtTMGTm"
-# 5.0.3.2674_FoS "rfECRBNHnSqEGik"
 # 5.0.2276 "n8m2PzRSLmiMrap"
 # 5.0.2156 "WBKTP8WxcZAi4Lx"
 # 5.0.2043 "iYetpysixzTPcYQ"
-NXTLINK="EMBWzHeYNtTMGTm"
+NXTLINK="n8m2PzRSLmiMrap"
 
 # FOG Code during install needs to match with case start of file followed by _DCLinuxAgent.zip
 NXTFOGLINK="3oiWJeBwtQFbHXM"
@@ -26,10 +27,9 @@ echo "***     EntroCIM Installer     ***"
 echo "**********************************"
 echo ""
 
-cDIR='PWD'
+cDIR=$(pwd)
 
-
-# check for entrocim user
+cd # check for entrocim user
 hasUser=false
 getent passwd entrocim >/dev/null 2>&1 && hasUser=true
 
@@ -38,7 +38,7 @@ if ! $hasUser; then
     echo "Creating 'entrocim' user"
     echo ""
     groupadd -f entrocim > /dev/null
-    adduser --system --ingroup entrocim entrocim > /dev/null
+    adduser --system -g entrocim entrocim > /dev/null
 fi
 
 echo -n "Enter location for EntroCIM (/opt/entrocim): "
@@ -106,26 +106,26 @@ read auto_start
 echo ""
 
 # Install latest Default-JRE, 7zip and htop
-echo "Installing EntroCIM pre-requisites..."
-echo ""
+#echo "Installing EntroCIM pre-requisites..."
+#echo ""
 
-apt-get install -y p7zip-full htop default-jre fail2ban -q
+#apt-get install -y p7zip-full htop default-jre fail2ban -q
 
 #Set Fail2Ban Options
-if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
-  echo "Fail2Ban Already Exists and is Configured"
-  echo ""
-else
-  if [ -e /etc/fail2ban/jail.conf ]; then
-    sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
-    echo "Auto Configuration of Fail2Ban has succeeded..."
-    echo ""
-    service fail2ban restart
-  else
-    echo "Problem with Auto Configuration of Fail2Ban"
-    echo ""
-  fi
-fi
+#if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
+#  echo "Fail2Ban Already Exists and is Configured"
+#  echo ""
+#else
+#  if [ -e /etc/fail2ban/jail.conf ]; then
+#    sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
+#    echo "Auto Configuration of Fail2Ban has succeeded..."
+#    echo ""
+#    service fail2ban restart
+#  else
+#    echo "Problem with Auto Configuration of Fail2Ban"
+#    echo ""
+#  fi
+#fi
 
 #Set Java environment var
 #if [ -z "${JAVA_HOME}" ]; then
@@ -142,7 +142,7 @@ if [ $fogenabled == "y" ] && [ -z "${CUST_CODE}" ]; then
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
-if [ -e ~/entrocim/EntroCIM.zip ]; then
+if [ -e $cDIR/entrocim/EntroCIM.zip ]; then
 echo -n "Would you like to retrieve the Latest EntroCIM installer (N/y): "
 read eCIMget
 
@@ -153,24 +153,24 @@ read eCIMget
   eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
 
   if [ $eCIMget == "y" ]; then
-    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
+    mkdir -p $cDIR/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $cDIR/entrocim/EntroCIM.zip
     cd entrocim
-    7z x EntroCIM.zip -aoa
+    unzip EntroCIM.zip
     cd ..
-    cp -R ~/entrocim/$extract_folder/* $install_path/
+    cp -R $cDIR/entrocim/$extract_folder/* $install_path/
     chown -R entrocim:entrocim $install_path/
   fi
 else
-  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
+  mkdir -p $cDIR/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $cDIR/entrocim/EntroCIM.zip
   cd entrocim
-  7z x EntroCIM.zip -aoa
+  unzip EntroCIM.zip
   cd ..
-  cp -R ~/entrocim/$extract_folder/* $install_path/
+  cp -R $cDIR/entrocim/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
 fi
 
 if [ $fogenabled == "y" ]; then
-  mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O ~/entrocim/$custcode"_DCLinuxAgent".zip
+  mkdir -p $cDIR/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O $cDIR/entrocim/$custcode"_DCLinuxAgent".zip
   cd entrocim
   7z x $custcode"_DCLinuxAgent".zip -aoa
   chmod +x DesktopCentral_LinuxAgent.bin
@@ -179,45 +179,45 @@ if [ $fogenabled == "y" ]; then
 fi
 
 # Add Secured SSH Communications...
-if [ ! -f /etc/cron.allow ]; then
-  GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O ~/entrocim/podupdate.zip
-  cd entrocim
-  7z e podupdate.zip -aoa -p$GETVAR1
-  mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
-  cp podupdate.log /home/entrocim/.ssh/id_rsa
-  rm podupdate.log podupdate.zip
-  chown -R entrocim:entrocim /home/entrocim/ && chmod 0400 /home/entrocim/.ssh/id_rsa
-  rsync -rltvhz -e "/usr/bin/ssh -o StrictHostKeyChecking=no -i /home/entrocim/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_info/updatescripts.sh /home/entrocim/IoT_Warez/  &&  chown -R entrocim:entrocim /home/entrocim/ && cp /root/.ssh/known_hosts /home/entrocim/.ssh/
-  echo -e 'entrocim' > /etc/cron.allow
-  sudo -H -u entrocim bash -c /home/entrocim/IoT_Warez/updatescripts.sh
-  sudo -H -u entrocim bash -c "/home/entrocim/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; /home/entrocim/scripts/sendlog.sh"
-fi
+#if [ ! -f /etc/cron.allow ]; then
+#  GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
+#  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/wJTCfg5GAFqGfGt/download -O $cDIR/entrocim/podupdate-noaes.zip
+#  cd $cDIR/entrocim
+#  unzip -jP $GETVAR1 podupdate-noaes.zip
+#  mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
+#  cp podupdate.log /home/entrocim/.ssh/id_rsa
+#  rm podupdate.log podupdate-noaes.zip
+#  chown -R entrocim:entrocim /home/entrocim/ && chmod 0400 /home/entrocim/.ssh/id_rsa
+#  rsync -rltvhz -e "/usr/bin/ssh -o StrictHostKeyChecking=no -i /home/entrocim/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_info/updatescripts.sh /home/entrocim/IoT_Warez/  &&  chown -R entrocim:entrocim /home/entrocim/ && cp /root/.ssh/known_hosts /home/entrocim/.ssh/
+#  echo -e 'entrocim' > /etc/cron.allow
+#  sudo -H -u entrocim bash -c /home/entrocim/IoT_Warez/updatescripts.sh
+#  sudo -H -u entrocim bash -c "/home/entrocim/scripts/podupdate.sh > /tmp/$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; /home/entrocim/scripts/sendlog.sh"
+#fi
 
 #Add Cron Jobs for entrocim and root users
-set -f
-ECRON=$'05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME\'_podupdate_\'`date \'+\%b-\%d-\%Y\'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC'
-RCRON=$'00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
-if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /tmp/\$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; \$HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim; then
-  echo "Automatic Updates are already enabled..."
-else
-  if [ ! -f /var/spool/cron/crontabs/entrocim ]; then
-    echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/crontabs/entrocim
-    chown entrocim:crontab /var/spool/cron/crontabs/entrocim
-    chmod 600 /var/spool/cron/crontabs/entrocim
-  fi
-fi
+#set -f
+#ECRON=$'05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME\'_podupdate_\'`date \'+\%b-\%d-\%Y\'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC'
+#RCRON=$'00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
+#if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /tmp/\$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; \$HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/entrocim; then
+#  echo "Automatic Updates are already enabled..."
+#else
+#  if [ ! -f /var/spool/cron/entrocim ]; then
+#    echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/entrocim
+#    chown entrocim:entrocim /var/spool/cron/entrocim
+#    chmod 600 /var/spool/cron/entrocim
+#  fi
+#fi
 
-if grep -Fqs "/home/entrocim/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
-  echo "Automatic Updates are already enabled..."
-else
-  if [ ! -f /var/spool/cron/crontabs/root ]; then
-    echo -e $RCRON > /var/spool/cron/crontabs/root
-    chown root:crontab /var/spool/cron/crontabs/root
-    chmod 600 /var/spool/cron/crontabs/root
-  fi
-fi
-set +f
+#if grep -Fqs "/home/entrocim/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC" /var/spool/cron/crontabs/root; then
+#  echo "Automatic Updates are already enabled..."
+#else
+#  if [ ! -f /var/spool/cron/crontabs/root ]; then
+#    echo -e $RCRON > /var/spool/cron/crontabs/root
+#    chown root:crontab /var/spool/cron/crontabs/root
+#    chmod 600 /var/spool/cron/crontabs/root
+#  fi
+#fi
+#set +f
 
 #Create Firewall App Rule for EntroCIM
 eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
