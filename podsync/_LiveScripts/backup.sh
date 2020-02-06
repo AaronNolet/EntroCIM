@@ -33,7 +33,7 @@ else
 fi
 
 echo -e "Backup Last Run: $DATE on $HOSTNAME\n\nVariables:\n\nSkyFin: $SkyFin\nBACKUPSOURCE: $BACKSOURCE\nBACKFILE: $BACKFILE\n\nRSYNC Log:\n" > /tmp/backup-$DATE.log
-cat /tmp/rsyn.log >> /tmp/backup-$DATE.log
+cat /tmp/rsync.log >> /tmp/backup-$DATE.log
 
 #/usr/bin/ssh -i $HOME/.ssh/id_rsa IoT_POD_Update@podupdate.iotwarez.com "sudo rm /volume1/podsync/_backups/$HOSTNAME/*"
 
