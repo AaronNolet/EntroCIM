@@ -2,6 +2,10 @@
 HOSTNAME=$(hostname)
 DATE=`date +%b-%d-%Y`
 CHECKDIR="var"
+BACKNUM="1"
+RHOST=IoT_POD_Update@podupdate.iotwarez.com
+
+shopt -s extglob
 
 # **********************************************
 # * Check if EntroCIM, Fin or Sky and Set Vars *
@@ -18,23 +22,38 @@ elif systemctl cat entrocim.service > /dev/null 2>&1; then
   SkyFin=eCIM
 fi
 
+if [ -f "/tmp/backlist.log" ]; then
+  rm /tmp/backlist.log
+fi
+if [ -f "/tmp/keep.log" ]; then
+  rm /tmp/keep.log
+fi
+if [ -f "/tmp/rsync.log" ]; then
+  rm /tmp/rsync.log
+fi
+
+
+
 if [ -d "$BACKUPSOURCE/$CHECKDIR" ]; then
-  # Control will enter here if $DIRECTORY exists.
-  BACKFILE=`ls -rt $BACKUPSOURCE/var/proj/*/backup/* | tail -1`
+  for dir in $BACKUPSOURCE/var/proj/*; do
+    if [ -d "$dir" ]; then
+      if [[ -d "$dir"/backup ]]; then
+        BACKFILES=$(ls -rt "$dir"/backup/ | tail -$BACKNUM)
+        echo "$dir"/backup/$BACKFILES >> /tmp/backlist.log
+        echo $BACKFILES >> /tmp/keep.log
+      fi
+    fi
+  done
 else
-  BACKFILE=`ls -rt $BACKUPSOURCE/db/*/snapshots/* | tail -1`
+echo "Error!!!"
 fi
 
 if /usr/bin/ssh -i $HOME/.ssh/id_rsa IoT_POD_Update@podupdate.iotwarez.com '[ -d /volume1/podsync/_backups/$HOSTNAME ]'; then
-  /usr/bin/rsync -vh $BACKFILE -e --delete-after --log-file=/tmp/rsync.log "/usr/bin/ssh -i $HOME/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_backups/$HOSTNAME/
+  /usr/bin/rsync -vhz `cat /tmp/backlist.log` --log-file=/tmp/rsync.log "/usr/bin/ssh -i $HOME/.ssh/id_rsa" $RHOST:/volume1/podsync/_backups/$HOSTNAME/
 else
   /usr/bin/ssh -i $HOME/.ssh/id_rsa IoT_POD_Update@podupdate.iotwarez.com "mkdir /volume1/podsync/_backups/$HOSTNAME"
-  /usr/bin/rsync -vh $BACKFILE -e --delete-after --log-file=/tmp/rsync.log "/usr/bin/ssh -i $HOME/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_backups/$HOSTNAME/
+  /usr/bin/rsync -vhz `cat /tmp/backlist.log` --log-file=/tmp/rsync.log "/usr/bin/ssh -i $HOME/.ssh/id_rsa" $RHOST:/volume1/podsync/_backups/$HOSTNAME/
 fi
 
-echo -e "Backup Last Run: $DATE on $HOSTNAME\n\nVariables:\n\nSkyFin: $SkyFin\nBACKUPSOURCE: $BACKSOURCE\nBACKFILE: $BACKFILE\n\nRSYNC Log:\n" > /tmp/backup-$DATE.log
+echo -e "Backup Last Run: $DATE on $HOSTNAME\n\nVariables:\n\nSkyFin: $SkyFin\nBACKUPSOURCE: $BACKUPSOURCE\nBACKFILE:\n\n$(cat /tmp/keep.log)\n\nRSYNC Log$
 cat /tmp/rsync.log >> /tmp/backup-$DATE.log
-
-#/usr/bin/ssh -i $HOME/.ssh/id_rsa IoT_POD_Update@podupdate.iotwarez.com "sudo rm /volume1/podsync/_backups/$HOSTNAME/*"
-
-#/usr/bin/rsync -vh $BACKFILE -e "/usr/bin/ssh -i $HOME/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_backups/$HOSTNAME/
