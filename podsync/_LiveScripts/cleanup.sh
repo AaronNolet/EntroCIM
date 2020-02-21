@@ -6,10 +6,10 @@ FILEKEEP=`cat /tmp/keep.log`
 
 echo $FILEKEEP
 
-/usr/bin/ssh -t -i $HOME/.ssh/id_rsa" $RHOST:/volume1/podsync/_backups/$HOSTNAME/ << EOF
+/usr/bin/ssh -t -i "$HOME/.ssh/id_rsa" $RHOST:/volume1/podsync/_backups/$HOSTNAME/ << EOF
 
 if (($?>0)); then
-  echo 'Cant find work dir... exiting'
+  echo "Can't find work dir... exiting"
   exit
 fi
 
