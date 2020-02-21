@@ -1,18 +1,15 @@
 #!/bin/bash
 HOSTNAME=$(hostname)
 DATE=`date +%b-%d-%Y`
-CHECKDIR="var"
-BACKNUM="1"
 RHOST=IoT_POD_Update@podupdate.iotwarez.com
 FILEKEEP=`cat /tmp/keep.log`
 
 echo $FILEKEEP
 
-/usr/bin/ssh -i $HOME/.ssh/id_rsa" $RHOST:/volume1/podsync/_backups/$HOSTNAME/ << EOF
+/usr/bin/ssh -t -i $HOME/.ssh/id_rsa" $RHOST:/volume1/podsync/_backups/$HOSTNAME/ << EOF
 
-# Exit if the directory isn't found.
 if (($?>0)); then
-  echo "Can't find work dir... exiting"
+  echo 'Cant find work dir... exiting'
   exit
 fi
 

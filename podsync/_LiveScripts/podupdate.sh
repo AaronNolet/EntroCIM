@@ -23,10 +23,10 @@
 #  2>&1; $HOME/scripts/sendlog.sh #Added by #IoT Warez, LLC"
 #
 #  ****************************************************************
-#  ***															***
-#  ***  AUTHOR													***
-#  ***  Aaron Nolet @ IoT Warez, LLC <a.nolet@iotwarez.com>		***
-#  ***															***
+#  ***														                            	***
+#  ***  AUTHOR													                        ***
+#  ***  Aaron Nolet @ IoT Warez, LLC <a.nolet@iotwarez.com>		  ***
+#  ***															                            ***
 #  ****************************************************************
 
 # ****************************
