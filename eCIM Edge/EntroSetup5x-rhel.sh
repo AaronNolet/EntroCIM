@@ -159,7 +159,7 @@ read eCIMget
     cd entrocim
     unzip EntroCIM.zip
     cd ..
-    cp -R $cDIR/entrocim/$extract_folder/* $install_path/
+    cp -R '$cDIR/entrocim/$extract_folder/*' '$install_path/'
     chown -R entrocim:entrocim $install_path/
   fi
 else
