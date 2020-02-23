@@ -109,7 +109,8 @@ echo ""
 echo "Installing EntroCIM pre-requisites..."
 echo ""
 
-yum install -y -q epel-release
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install epel-release-latest-7.noarch.rpm -y -q
 yum install -y p7zip-full htop default-jre fail2ban -q
 
 #Set Fail2Ban Options
