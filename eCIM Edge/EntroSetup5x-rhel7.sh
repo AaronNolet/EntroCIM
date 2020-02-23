@@ -133,7 +133,7 @@ fi
 if [ -z "${JAVA_HOME}" ]; then
   echo "Adding Java Home Environment"
   echo ""
-  echo "JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64;" >> /etc/environment
+  echo "JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk;" >> /etc/environment
 fi
 
 #Set FOG environment var
