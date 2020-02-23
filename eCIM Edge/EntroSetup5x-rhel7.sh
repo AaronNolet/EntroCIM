@@ -205,7 +205,7 @@ if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /
 else
   if [ ! -f /var/spool/cron/entrocim ]; then
     echo -e "SHELL=/bin/bash\n"$ECRON > /var/spool/cron/entrocim
-    chown entrocim:crontab /var/spool/cron/entrocim
+    chown entrocim:root /var/spool/cron/entrocim
     chmod 600 /var/spool/cron/entrocim
   fi
 fi
@@ -215,7 +215,7 @@ if grep -Fqs "/home/entrocim/scripts/fail2ban-allstatus.sh #Added by IoT Warez, 
 else
   if [ ! -f /var/spool/cron/root ]; then
     echo -e $RCRON > /var/spool/cron/root
-    chown root:crontab /var/spool/cron/root
+    chown root:root /var/spool/cron/root
     chmod 600 /var/spool/cron/root
   fi
 fi
