@@ -110,8 +110,8 @@ echo "Installing EntroCIM pre-requisites..."
 echo ""
 
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-yum install epel-release-latest-7.noarch.rpm -y -q
-yum install -y p7zip-full htop default-jre fail2ban -q
+yum install -y epel-release-latest-7.noarch.rpm -q
+yum install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban -q
 
 #Set Fail2Ban Options
 if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
