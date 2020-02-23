@@ -38,7 +38,7 @@ if ! $hasUser; then
     echo "Creating 'entrocim' user"
     echo ""
     groupadd -f entrocim > /dev/null
-    adduser --system --ingroup entrocim entrocim > /dev/null
+    adduser --system --gid entrocim entrocim > /dev/null
 fi
 
 echo -n "Enter location for EntroCIM (/opt/entrocim): "
