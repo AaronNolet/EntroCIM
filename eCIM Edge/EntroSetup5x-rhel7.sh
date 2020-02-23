@@ -155,24 +155,24 @@ read eCIMget
   eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
 
   if [ $eCIMget == "y" ]; then
-    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
+    mkdir -p $PWD/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $PWD/entrocim/EntroCIM.zip
     cd entrocim
     7z x EntroCIM.zip -aoa
     cd ..
-    cp -R ~/entrocim/$extract_folder/* $install_path/
+    cp -R $PWD/entrocim/$extract_folder/* $install_path/
     chown -R entrocim:entrocim $install_path/
   fi
 else
-  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
+  mkdir -p $PWD/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $PWD/entrocim/EntroCIM.zip
   cd entrocim
   7z x EntroCIM.zip -aoa
   cd ..
-  cp -R ~/entrocim/$extract_folder/* $install_path/
+  cp -R $PWD/entrocim/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
 fi
 
 if [ $fogenabled == "y" ]; then
-  mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O ~/entrocim/$custcode"_DCLinuxAgent".zip
+  mkdir -p $PWD/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O $PWD/entrocim/$custcode"_DCLinuxAgent".zip
   cd entrocim
   7z x $custcode"_DCLinuxAgent".zip -aoa
   chmod +x DesktopCentral_LinuxAgent.bin
@@ -183,7 +183,7 @@ fi
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
   GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O ~/entrocim/podupdate.zip
+  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O $PWD/entrocim/podupdate.zip
   cd entrocim
   7z e podupdate.zip -aoa -p$GETVAR1
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
