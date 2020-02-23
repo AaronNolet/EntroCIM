@@ -101,9 +101,17 @@ echo -n "Would you like to create a firewall rule for EntroCIM HTTP and enable? 
 read eCIMfw
 echo ""
 
+if [ -z $eCIMfw ]; then
+  eCIMfw="n"
+fi
+
 echo -n "Automatically run EntroCIM at startup (N/y): "
 read auto_start
 echo ""
+
+if [ -z $auto_start ]; then
+  auto_start="n"
+fi
 
 # Install latest Default-JRE, 7zip and htop
 echo "Installing EntroCIM pre-requisites..."
@@ -223,7 +231,7 @@ set +f
 
 #Create Firewall App Rule for EntroCIM
 eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
-if [ $eCIMfw == "y" ]; then
+if [ "$eCIMfw" == "y" ]; then
   echo "Adding new ufw firewall app rule and enabling"
   echo ""
   echo -e '[EntroCIM]
