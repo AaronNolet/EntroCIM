@@ -110,8 +110,6 @@ echo "Installing EntroCIM pre-requisites..."
 echo ""
 
 yum install -y -q epel-release
-rpm -U --quiet http://mirrors.kernel.org/fedora-epel/6/i386/epel-release-6-8.noarch.rpm
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
 yum install -y p7zip-full htop default-jre fail2ban -q
 
 #Set Fail2Ban Options
