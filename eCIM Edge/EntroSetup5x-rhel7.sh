@@ -207,7 +207,7 @@ fi
 #Add Cron Jobs for entrocim and root users
 set -f
 ECRON=$'05 04 * * * $HOME/IoT_Warez/updatescripts.sh; $HOME/scripts/podupdate.sh > /tmp/$HOSTNAME\'_podupdate_\'`date \'+\%b-\%d-\%Y\'`.log 2>&1; $HOME/scripts/sendlog.sh #Added by IoT Warez, LLC'
-RCRON=$'00 04 * * * /home/finstack/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
+RCRON=$'00 04 * * * /home/entrocim/scripts/fail2ban-allstatus.sh #Added by IoT Warez, LLC'
 if grep -Fqs "\$HOME/IoT_Warez/updatescripts.sh; \$HOME/scripts/podupdate.sh > /tmp/\$HOSTNAME'_podupdate_'`date '+\%b-\%d-\%Y'`.log 2>&1; \$HOME/scripts/sendlog.sh #Added by IoT Warez, LLC" /var/spool/cron/entrocim; then
   echo "Automatic Updates are already enabled..."
 else
