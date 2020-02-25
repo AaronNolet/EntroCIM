@@ -29,7 +29,7 @@ echo ""
 cDIR='PWD'
 GETFWZONE=$(firewall-cmd --get-default-zone)
 
-echo "Current Ative Firewall Zone: $GETFWZONE"
+echo "Currently Ative Firewall Zone: $GETFWZONE"
 echo ""
 
 # check for entrocim user
@@ -235,15 +235,10 @@ set +f
 #Create Firewall App Rule for EntroCIM
 eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
 if [ "$eCIMfw" == "y" ]; then
-  echo "Adding new ufw firewall app rule and enabling"
+  echo "Adding New Firewall Rule to Active Zone of $GETFWZONE for Incoming TCP Port $port"
   echo ""
-  echo -e '[EntroCIM]
-  title=EntroCIM Web Server
-  description=EntroCIM HTTP Web Port ('$port')
-  ports='$port'/tcp' > /etc/ufw/applications.d/entrocim-server
-
-  echo "Enabling UFW Firewall"
-  ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
+  firewall-cmd --zone=$GETFWZONE --add-port=$port/tcp --permanent
+  sudo firewall-cmd --reload
 fi
 
 #Set http port in host
