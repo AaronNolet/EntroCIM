@@ -27,7 +27,10 @@ echo "**********************************"
 echo ""
 
 cDIR='PWD'
+GETFWZONE=$(firewall-cmd --get-default-zone)
 
+echo "Current Ative Firewall Zone: $GETFWZONE"
+echo ""
 
 # check for entrocim user
 hasUser=false
