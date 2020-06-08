@@ -128,7 +128,7 @@ echo ""
 # ********************************************************
 
 sed 's|+ |/volume1/podsync/|' $HOME/$HOSTNAME.lst |grep volume |sed 's/\r/ :/' |tr -d '\n' |sed 's/ :$//' > $HOSTNAME'_POD-Add'.lst
-sed 's|- |-f "R |' $HOME/$HOSTNAME.lst |grep \\-f |sed 's/\r/" /' |tr -d '\n' |sed 's/.pod$/.pod"/' > $HOSTNAME'_POD-Remove'.lst
+sed 's|- |-f "R |' $HOME/$HOSTNAME.lst |grep \\-f |sed 's/\r/" \/' |tr -d '\n' |sed 's/.pod$/.pod"/' > $HOSTNAME'_POD-Remove'.lst
 
 # *****************************************
 # * Get Required POD's From Remote Server *
