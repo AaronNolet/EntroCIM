@@ -8,12 +8,13 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 #Set Vars
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
+# 5.0.4.2977_Fos "xZMZYGengiTMcXf"
 # 5.0.3.2725_Fos "EMBWzHeYNtTMGTm"
 # 5.0.3.2674_FoS "rfECRBNHnSqEGik"
 # 5.0.2276 "n8m2PzRSLmiMrap"
 # 5.0.2156 "WBKTP8WxcZAi4Lx"
 # 5.0.2043 "iYetpysixzTPcYQ"
-NXTLINK="EMBWzHeYNtTMGTm"
+NXTLINK="xZMZYGengiTMcXf"
 
 # FOG Code during install needs to match with case start of file followed by _DCLinuxAgent.zip
 NXTFOGLINK="3oiWJeBwtQFbHXM"
@@ -181,7 +182,7 @@ fi
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
   GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O ~/entrocim/podupdate.zip
+  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/3Q9bZNR6WeSGNAD/download -O ~/entrocim/podupdate.zip
   cd entrocim
   7z e podupdate.zip -aoa -p$GETVAR1
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez

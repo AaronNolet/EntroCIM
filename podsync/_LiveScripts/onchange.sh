@@ -36,21 +36,27 @@ if [ $? -ne 0 ] ; then
     echo date '+%d/%m/%Y %H:%M:%S'
     echo "Restarting finstack Service"
     service finstack stop
-    sleep 10
+    while pgrep java -u entrocim >/dev/null; do
+      sleep 10;
+    done
     service finstack start
     echo "Completed..."
   elif [ "$SkyFin" == "Sky" ]; then
     echo date '+%d/%m/%Y %H:%M:%S'
     echo "Restarting skyspark Service"
     service skyspark stop
-    sleep 10
+    while pgrep java -u entrocim >/dev/null; do
+      sleep 10;
+    done
     service skyspark start
     echo "Completed..."
   elif [ "$SkyFin" == "eCIM" ]; then
     echo date '+%d/%m/%Y %H:%M:%S'
     echo "Restarting EntroCIM Service"
     service entrocim stop
-    sleep 10
+    while pgrep java -u entrocim >/dev/null; do
+      sleep 10;
+    done
     service entrocim start
     echo "Completed..."
   fi
