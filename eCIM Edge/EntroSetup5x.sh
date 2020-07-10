@@ -182,7 +182,7 @@ fi
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
   GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O ~/entrocim/podupdate.zip
+  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/3Q9bZNR6WeSGNAD/download -O ~/entrocim/podupdate.zip
   cd entrocim
   7z e podupdate.zip -aoa -p$GETVAR1
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
