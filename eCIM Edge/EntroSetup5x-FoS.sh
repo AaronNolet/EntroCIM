@@ -154,7 +154,7 @@ read eCIMget
 
   if [ $eCIMget == "y" ]; then
     mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
-    cd entrocim
+    cd ~/entrocim
     7z x EntroCIM.zip -aoa
     cd ..
     cp -R ~/entrocim/$extract_folder/* $install_path/
