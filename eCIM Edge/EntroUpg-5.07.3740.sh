@@ -47,6 +47,12 @@ else
   read eCIMupg
   eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
 fi
+
+if [[ ! -d $install_path/lib || ! -d $install_path/var ]]
+  echo -e "Install location subfolders do not exist... Exiting"
+  exit
+fi
+
 if [ $eCIMupg == "y" ]; then
   BKSRC="$install_path/lib $install_path/var/brand"
   BKDST="$pkg_folder/$UPGV/Backup"
