@@ -48,7 +48,7 @@ else
   eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
 fi
 
-if [[ ! -d $install_path/lib || ! -d $install_path/var ]]; then
+if [[ ! -d "$install_path/lib" || ! -d "$install_path/var" ]]; then
   echo -e "Install location subfolders do not exist... Exiting"
   exit
 fi
