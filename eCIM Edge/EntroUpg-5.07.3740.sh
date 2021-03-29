@@ -44,9 +44,10 @@ else
 fi
 if [ $eCIMupg == "y" ]; then
   mkdir -p ~/upgrade && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/upgrade/EntroCIM-$UPGV.zip
-  cd upgrade
-  7z x EntroCIM-$UPGV.zip -aoa
-  cd ..
+  mkdir -p ~/upgrade/$UPGV
+  cd upgrade/$UPGV
+  7z x ../EntroCIM-$UPGV.zip -aoa
+  cd ../..
 #  cp -R ~/upgrade/$extract_folder/* $install_path/
 #  chown -R entrocim:entrocim $install_path/
   echo -e "Upgrade of EntroCIM Instance located @ $install_path has been completed...\n"
