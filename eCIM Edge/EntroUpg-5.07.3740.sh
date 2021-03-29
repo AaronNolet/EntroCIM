@@ -19,14 +19,14 @@ if [ ! -d "$install_path" ]; then
   echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
   read install_path
   if [ ! -d "$install_path" ]; then
-    echo -e "Install location does not exist... Exiting"
+    echo -e "$(tput setaf 1)Install location does not exist... Exiting$(tput sgr 0)\n"
     exit
   else
     eCIMins="n"
   fi
 
 elif [ -d "$install_path" ]; then
-  echo -e "Found default install location of $install_path\n"
+  echo -e "$(tput setaf 2)Found default install location of $install_path$(tput sgr 0)\n\n"
   echo -n "Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): "
   read eCIMins
   eCIMins=`echo $eCIMins | awk '{print tolower($0)}'`
@@ -35,7 +35,7 @@ elif [ -d "$install_path" ]; then
     read install_path
     echo -e "New Install Path $install_path\n"
     if [ ! -d "$install_path" ]; then
-      echo -e "Install location does not exist... Exiting"
+      echo -e "$(tput setaf 1)Install location does not exist... Exiting$(tput sgr 0)\n"
       exit
     fi
   fi
@@ -49,7 +49,7 @@ else
 fi
 
 if [ ! -d "$install_path/lib" ] || [ ! -d "$install_path/var" ]; then
-  echo -e "$(tput setaf 3)Install location subfolders do not exist... Exiting$(tput sgr 0)\n"
+  echo -e "$(tput setaf 1)Install location subfolders do not exist... Exiting$(tput sgr 0)\n"
   exit
 fi
 
@@ -73,19 +73,21 @@ if [ $eCIMupg == "y" ]; then
       fi
       echo -e "$(tput setaf 2)EntroCIM Service has shutdown... Continuing...$(tput sgr 0)\n"
     done
+  fi
 
-    if [ -e /var/run/onchange.pid ]; then
-      service entrocim stop
-      echo -e "$(tput setaf 2)Shutting Down OnChange Service...\n"
-      while [ true ]
-      do
-        pid=$(cat /var/run/onchange.pid)
-        if [[ -n "$pid" && $(ps -p $pid | wc -l) -eq 2 ]]; then
-          echo -e "$(tput setaf 3)Waiting for OnChange Service shutdown...\n"
-          sleep 5s
-        fi
-        echo -e "$(tput setaf 2)OnChange Service has shutdown... Continuing...$(tput sgr 0)\n"
-      done
+  if [ -e /var/run/onchange.pid ]; then
+    service entrocim stop
+    echo -e "$(tput setaf 2)Shutting Down OnChange Service...\n"
+    while [ true ]
+    do
+      pid=$(cat /var/run/onchange.pid)
+      if [[ -n "$pid" && $(ps -p $pid | wc -l) -eq 2 ]]; then
+        echo -e "$(tput setaf 3)Waiting for OnChange Service shutdown...\n"
+        sleep 5s
+      fi
+      echo -e "$(tput setaf 2)OnChange Service has shutdown... Continuing...$(tput sgr 0)\n"
+    done
+  fi
 
   echo "tar -cf $BKDST/$BKFN -C $BKSRC"
   tar -cf $BKDST/$BKFN -C $BKSRC
@@ -93,7 +95,7 @@ if [ $eCIMupg == "y" ]; then
   cp -R $pkg_folder/$UPGV/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
   echo -e "Upgrade of EntroCIM Instance located @ $install_path has been completed...\n"
-elif [ $eCIMupg == "n" ]; then
-  echo -e "User Cancelled the Upgrade...\n"
-  exit
-fi
+  elif [ $eCIMupg == "n" ]; then
+    echo -e "$(tput setaf 3)User Cancelled the Upgrade...$(tput sgr 0)\n"
+    exit
+  fi
