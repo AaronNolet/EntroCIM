@@ -25,7 +25,7 @@ if [ -d "$install_path" ]; then
     echo -e "New Install Path $install_path\n"
     if [ ! -d "$install_path" ]; then
       echo -e "Install location does not exist... Exiting"
-      EXIT
+      exit 1
     fi
   fi
   echo -e "Install Path $install_path\n"
