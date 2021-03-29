@@ -23,6 +23,10 @@ if [ -d "$install_path" ]; then
     echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
     read install_path
     echo -e "New Install Path $install_path\n"
+    if [ ! -d "$install_path" ]; then
+      echo -e "Install location does not exist... Exiting"
+      EXIT
+    fi
   fi
   echo -e "Install Path $install_path\n"
 fi
