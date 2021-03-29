@@ -13,6 +13,7 @@ NXTLINK="WNcWHqHNLd8EWJq"
 UPGV="5.0.7.3740"
 install_path="/opt/entrocim"
 extract_folder="EntroCIM"
+pkg_folder="/home/entrocim/upgrade"
 
 if [ ! -d "$install_path" ]; then
   echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
@@ -47,12 +48,11 @@ else
   eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
 fi
 if [ $eCIMupg == "y" ]; then
-  mkdir -p ~/upgrade && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/upgrade/EntroCIM-$UPGV.zip
-  mkdir -p ~/upgrade/$UPGV
-  cd upgrade/$UPGV
-  7z x ../EntroCIM-$UPGV.zip -aoa
-  cd ../..
-  cp -R ~/upgrade/$UPGV/$extract_folder/* $install_path/
+  mkdir -p $pkg_folder && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $pkg_folder/EntroCIM-$UPGV.zip
+  mkdir -p $pkg_folder/$UPGV
+  cd $pkg_folder
+  7z x EntroCIM-$UPGV.zip -aoa
+  cp -R $pkg_folder/$UPGV/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
   echo -e "Upgrade of EntroCIM Instance located @ $install_path has been completed...\n"
 elif [ $eCIMupg == "n" ]; then
