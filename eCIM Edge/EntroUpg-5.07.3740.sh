@@ -11,13 +11,18 @@ HOSTNAME=$(hostname)
 install_path="/opt/entrocim"
 NXTLINK=""
 
+if [ ! -d "$install_path" ]; then
+  echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
+  read install_path
+  if [ ! -d "$install_path" ]; then
+    echo -e "Install location does not exist... Exiting"
+    exit
+  fi
 
-
-if [ -d "$install_path" ]; then
+elif [ -d "$install_path" ]; then
   echo -e "Found default install location of $install_path\n"
   echo -n "Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): "
   read eCIMins
-  echo ""
   eCIMins=`echo $eCIMins | awk '{print tolower($0)}'`
   if [ $eCIMins == "n" ]; then
     echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
@@ -28,8 +33,9 @@ if [ -d "$install_path" ]; then
       exit
     fi
   fi
-  echo -e "Install Path $install_path\n"
 fi
+echo -e "Install Path $install_path\n"
+
 
 #eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
 #if [ $eCIMupg == "y" ]; then
