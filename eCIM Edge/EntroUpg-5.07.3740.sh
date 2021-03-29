@@ -9,7 +9,8 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
 install_path="/opt/entrocim"
-NXTLINK=""
+NXTLINK="WNcWHqHNLd8EWJq"
+UPGV="5.0.7.3740"
 
 if [ ! -d "$install_path" ]; then
   echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
@@ -34,15 +35,22 @@ elif [ -d "$install_path" ]; then
     fi
   fi
 fi
-echo -e "Install Path $install_path\n"
-
-
-#eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
-#if [ $eCIMupg == "y" ]; then
-#  mkdir -p ~/upgrade && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
-#  cd entrocim
-#  7z x EntroCIM.zip -aoa
-#  cd ..
+if [ $eCIMins == "y" ]; then
+  eCIMupg="y"
+else
+  echo -n "Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): "
+  read eCIMupg
+  eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
+fi
+if [ $eCIMupg == "y" ]; then
+  mkdir -p ~/upgrade && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/upgrade/EntroCIM-$UPGV.zip
+  cd upgrade
+  7z x EntroCIM-$UPGV.zip -aoa
+  cd ..
 #  cp -R ~/upgrade/$extract_folder/* $install_path/
 #  chown -R entrocim:entrocim $install_path/
-#elif [ $eCIMupg == "n" ]; then
+  echo -e "Upgrade of EntroCIM Instance located @ $install_path has been completed...\n"
+elif [ $eCIMupg == "n" ]; then
+  echo -e "User Cancelled the Upgrade...\n"
+  exit
+fi
