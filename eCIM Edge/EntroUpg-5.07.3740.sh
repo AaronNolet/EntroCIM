@@ -8,9 +8,11 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 #Set Vars
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
-install_path="/opt/entrocim"
+
 NXTLINK="WNcWHqHNLd8EWJq"
 UPGV="5.0.7.3740"
+install_path="/opt/entrocim"
+extract_folder="EntroCIM"
 
 if [ ! -d "$install_path" ]; then
   echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
@@ -48,8 +50,8 @@ if [ $eCIMupg == "y" ]; then
   cd upgrade/$UPGV
   7z x ../EntroCIM-$UPGV.zip -aoa
   cd ../..
-#  cp -R ~/upgrade/$extract_folder/* $install_path/
-#  chown -R entrocim:entrocim $install_path/
+  cp -R ~/upgrade/$UPGV/$extract_folder/* $install_path/
+  chown -R entrocim:entrocim $install_path/
   echo -e "Upgrade of EntroCIM Instance located @ $install_path has been completed...\n"
 elif [ $eCIMupg == "n" ]; then
   echo -e "User Cancelled the Upgrade...\n"
