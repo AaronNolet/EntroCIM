@@ -55,7 +55,7 @@ if [ $eCIMupg == "y" ]; then
   mkdir -p $pkg_folder/$UPGV && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $pkg_folder/$UPGV/EntroCIM-$UPGV.zip
   mkdir -p $pkg_folder/$UPGV
   cd $pkg_folder/$UPGV
-  tar -cf $BKDST/$BKFN $BKSRC
+  tar -cf $BKDST/$BKFN -C $BKSRC
   7z x EntroCIM-$UPGV.zip -aoa
   cp -R $pkg_folder/$UPGV/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
