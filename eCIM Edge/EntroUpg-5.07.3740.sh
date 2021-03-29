@@ -15,10 +15,6 @@ install_path="/opt/entrocim"
 extract_folder="EntroCIM"
 pkg_folder="/home/entrocim/upgrade"
 
-BKSRC="$install_path/lib $install_path/var/brand"
-BKDST="$pkg_folder/$UPGV/Backup"
-BKFN=EntroBAK-$(date +%-Y%-m%-d)-$(date +%-T).tgz
-
 if [ ! -d "$install_path" ]; then
   echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
   read install_path
@@ -52,6 +48,10 @@ else
   eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
 fi
 if [ $eCIMupg == "y" ]; then
+  BKSRC="$install_path/lib $install_path/var/brand"
+  BKDST="$pkg_folder/$UPGV/Backup"
+  BKFN=EntroBAK-$(date +%-Y%-m%-d)-$(date +%-T).tgz
+  mkdir -p $BKDST
   mkdir -p $pkg_folder/$UPGV && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $pkg_folder/$UPGV/EntroCIM-$UPGV.zip
   mkdir -p $pkg_folder/$UPGV
   cd $pkg_folder/$UPGV
