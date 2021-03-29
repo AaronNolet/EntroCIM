@@ -30,6 +30,7 @@ elif [ -d "$install_path" ]; then
   if [ $eCIMins == "n" ]; then
     echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
     read install_path
+    eCIMins="y"
     echo -e "New Install Path $install_path\n"
     if [ ! -d "$install_path" ]; then
       echo -e "Install location does not exist... Exiting"
