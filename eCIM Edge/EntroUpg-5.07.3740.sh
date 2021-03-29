@@ -49,7 +49,7 @@ else
 fi
 
 if [ ! -d "$install_path/lib" ] || [ ! -d "$install_path/var" ]; then
-  echo -e "Install location subfolders do not exist... Exiting"
+  echo -e "$(tput setaf 3)Install location subfolders do not exist... Exiting$(tput sgr 0)\n"
   exit
 fi
 
@@ -61,6 +61,32 @@ if [ $eCIMupg == "y" ]; then
   mkdir -p $pkg_folder/$UPGV && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $pkg_folder/$UPGV/EntroCIM-$UPGV.zip
   mkdir -p $pkg_folder/$UPGV
   cd $pkg_folder/$UPGV
+  if [ -e /var/run/entrocim.pid ]; then
+    service entrocim stop
+    echo -e "$(tput setaf 2)Shutting Down EntroCIM Service...\n"
+    while [ true ]
+    do
+      pid=$(cat /var/run/entrocim.pid)
+      if [[ -n "$pid" && $(ps -p $pid | wc -l) -eq 2 ]]; then
+        echo -e "$(tput setaf 3)Waiting for EntroCIM Service shutdown...\n"
+        sleep 5s
+      fi
+      echo -e "$(tput setaf 2)EntroCIM Service has shutdown... Continuing...$(tput sgr 0)\n"
+    done
+
+    if [ -e /var/run/onchange.pid ]; then
+      service entrocim stop
+      echo -e "$(tput setaf 2)Shutting Down OnChange Service...\n"
+      while [ true ]
+      do
+        pid=$(cat /var/run/onchange.pid)
+        if [[ -n "$pid" && $(ps -p $pid | wc -l) -eq 2 ]]; then
+          echo -e "$(tput setaf 3)Waiting for OnChange Service shutdown...\n"
+          sleep 5s
+        fi
+        echo -e "$(tput setaf 2)OnChange Service has shutdown... Continuing...$(tput sgr 0)\n"
+      done
+
   echo "tar -cf $BKDST/$BKFN -C $BKSRC"
   tar -cf $BKDST/$BKFN -C $BKSRC
   7z x EntroCIM-$UPGV.zip -aoa
