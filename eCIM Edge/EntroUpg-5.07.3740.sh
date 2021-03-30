@@ -108,8 +108,17 @@ if [ $eCIMupg == "y" ]; then
   7z x EntroCIM-$UPGV.zip -aoa
   cp -R $pkg_folder/$UPGV/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
-  echo -e "Upgrade of EntroCIM Instance located @ $install_path has been completed...\n"
-  elif [ $eCIMupg == "n" ]; then
-    echo -e "$(tput setaf 3)User Cancelled the Upgrade...$(tput sgr 0)\n"
-    exit
+  echo -e "$(tput setaf 2)Upgrade of EntroCIM Instance located @ $install_path has been completed...\n"
+  if [ -e /etc/init.d/entrocim ]; then
+    echo -e "Starting the Entrocim Service...\n"
+    service entrocim start
   fi
+  if [ -e /etc/init.d/onchange ]; then
+    echo -e "Starting the OnChange Service...\n"
+    service onchange start
+  fi
+  tput sgr 0
+elif [ $eCIMupg == "n" ]; then
+  echo -e "$(tput setaf 3)User Cancelled the Upgrade...$(tput sgr 0)\n"
+  exit
+fi
