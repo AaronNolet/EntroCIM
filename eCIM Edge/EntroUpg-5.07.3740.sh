@@ -98,7 +98,7 @@ if [ $eCIMupg == "y" ]; then
   fi
 
   echo -e "$(tput setaf 2)Backing up important files to $BKDST/$BKFN$(tput sgr 0)"
-  tar -cf $BKDST/$BKFN -C $BKSRC
+  tar -cf $BKDST/$BKFN $BKSRC
   if [ $? -eq 0 ]; then
     echo -e "$(tput setaf 2)Success...$(tput sgr 0)"
     rm -R $install_path/lib/fan/
