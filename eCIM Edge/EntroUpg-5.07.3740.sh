@@ -78,29 +78,23 @@ if [ $eCIMupg == "y" ]; then
   if [ -e /var/run/entrocim.pid ]; then
     service entrocim stop
     echo -e "$(tput setaf 2)Shutting Down EntroCIM Service...\n"
-    while [ true ]
+    while [ -e /var/run/entrocim.pid ]
     do
-      pid=$(cat /var/run/entrocim.pid)
-      if [[ -n "$pid" && $(ps -p $pid | wc -l) -eq 2 ]]; then
         echo -e "$(tput setaf 3)Waiting for EntroCIM Service shutdown...\n"
         sleep 5s
-      fi
-      echo -e "$(tput setaf 2)EntroCIM Service has shutdown... Continuing...$(tput sgr 0)\n"
     done
+    echo -e "$(tput setaf 2)EntroCIM Service has shutdown... Continuing...$(tput sgr 0)\n"
   fi
 
   if [ -e /var/run/onchange.pid ]; then
     service entrocim stop
     echo -e "$(tput setaf 2)Shutting Down OnChange Service...\n"
-    while [ true ]
+    while [ -e /var/run/entrocim.pid ]
     do
-      pid=$(cat /var/run/onchange.pid)
-      if [[ -n "$pid" && $(ps -p $pid | wc -l) -eq 2 ]]; then
         echo -e "$(tput setaf 3)Waiting for OnChange Service shutdown...\n"
         sleep 5s
-      fi
-      echo -e "$(tput setaf 2)OnChange Service has shutdown... Continuing...$(tput sgr 0)\n"
     done
+    echo -e "$(tput setaf 2)OnChange Service has shutdown... Continuing...$(tput sgr 0)\n"
   fi
 
   echo "tar -cf $BKDST/$BKFN -C $BKSRC"
