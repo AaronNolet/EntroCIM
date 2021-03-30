@@ -77,21 +77,21 @@ if [ $eCIMupg == "y" ]; then
   cd $pkg_folder/$UPGV
   if [ -e /var/run/entrocim.pid ]; then
     service entrocim stop
-    echo -e "$(tput setaf 2)Shutting Down EntroCIM Service...\n"
+    echo -e "$(tput setaf 2)Shutting Down EntroCIM Service..."
     while [ -e /var/run/entrocim.pid ]
     do
-        echo -e "$(tput setaf 3)Waiting for EntroCIM Service shutdown...\n"
+        echo -e "$(tput setaf 3)Waiting for EntroCIM Service shutdown..."
         sleep 5s
     done
     echo -e "$(tput setaf 2)EntroCIM Service has shutdown... Continuing...$(tput sgr 0)\n"
   fi
 
   if [ -e /var/run/onchange.pid ]; then
-    service entrocim stop
-    echo -e "$(tput setaf 2)Shutting Down OnChange Service...\n"
-    while [ -e /var/run/entrocim.pid ]
+    service onchange stop
+    echo -e "$(tput setaf 2)Shutting Down OnChange Service..."
+    while [ -e /var/run/onchange.pid ]
     do
-        echo -e "$(tput setaf 3)Waiting for OnChange Service shutdown...\n"
+        echo -e "$(tput setaf 3)Waiting for OnChange Service shutdown..."
         sleep 5s
     done
     echo -e "$(tput setaf 2)OnChange Service has shutdown... Continuing...$(tput sgr 0)\n"
