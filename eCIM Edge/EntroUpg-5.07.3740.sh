@@ -5,7 +5,7 @@ set -e
 trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
 if (( $EUID != 0 )); then
-    echo "$(tput setaf 6)Please run as root$(tput sgr 0)"
+    echo "$(tput setaf 1)Please run as root$(tput sgr 0)"
     exit
 fi
 
