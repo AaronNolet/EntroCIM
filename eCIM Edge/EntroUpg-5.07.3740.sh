@@ -20,7 +20,7 @@ clear
 
 echo -e "$(tput setaf 6)**********************************"
 echo -e "***     EntroCIM Updater       ***"
-echo -e "**********************************$(tput sgr 0)/n/n"
+echo -e "**********************************\n\n$(tput sgr 0)"
 echo
 
 
