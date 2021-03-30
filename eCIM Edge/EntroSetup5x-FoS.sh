@@ -4,6 +4,10 @@ set -e
 # Install a trap to catch errors and clean-up temp files
 trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
+if (( $EUID != 0 )); then
+    echo "$(tput setaf 1)Please run as root$(tput sgr 0)"
+    exit
+fi
 
 #Set Vars
 HOSTNAME=$(hostname)
@@ -13,7 +17,7 @@ HOSTNAME=$(hostname)
 # 5.0.4.2977_Fos "xZMZYGengiTMcXf"
 # 5.0.3.2725_Fos "EMBWzHeYNtTMGTm"
 # 5.0.3.2674_FoS "rfECRBNHnSqEGik"
-NXTLINK="apagktAQg3CpWje"
+NXTLINK="djkDr5xxrqAPaES"
 
 # FOG Code during install needs to match with case start of file followed by _DCLinuxAgent.zip
 NXTFOGLINK="3oiWJeBwtQFbHXM"
