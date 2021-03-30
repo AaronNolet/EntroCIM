@@ -70,7 +70,7 @@ fi
 if [ $eCIMupg == "y" ]; then
   BKSRC="$install_path/lib $install_path/var/brand"
   BKDST="$pkg_folder/$UPGV/Backup"
-  BKFN=EntroBAK-$(date +%-Y%-m%-d)-$(date +%-T).tgz
+  BKFN=EntroBAK-$(date +%F).tgz
   mkdir -p $BKDST
   mkdir -p $pkg_folder/$UPGV && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $pkg_folder/$UPGV/EntroCIM-$UPGV.zip
   mkdir -p $pkg_folder/$UPGV
@@ -97,8 +97,14 @@ if [ $eCIMupg == "y" ]; then
     echo -e "$(tput setaf 2)OnChange Service has shutdown... Continuing...$(tput sgr 0)\n"
   fi
 
-  echo "tar -cf $BKDST/$BKFN -C $BKSRC"
+  echo -e "$(tput setaf 2)Backing up important files to $BKDST/$BKFN$(tput sgr 0)"
   tar -cf $BKDST/$BKFN -C $BKSRC
+  if [ $? -eq 0 ]; then
+    echo -e "$(tput setaf 2)Success...$(tput sgr 0)"
+    rm -R $install_path/lib/fan/
+  else
+    echo -e "$(tput setaf 1)Failure...$(tput sgr 0)"
+  fi
   7z x EntroCIM-$UPGV.zip -aoa
   cp -R $pkg_folder/$UPGV/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
