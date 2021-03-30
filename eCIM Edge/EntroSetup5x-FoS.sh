@@ -8,6 +8,7 @@ trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 #Set Vars
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
+# 5.0.7.3740_FoS "djkDr5xxrqAPaES"
 # 5.0.5.3161_FoS "apagktAQg3CpWje"
 # 5.0.4.2977_Fos "xZMZYGengiTMcXf"
 # 5.0.3.2725_Fos "EMBWzHeYNtTMGTm"
@@ -17,6 +18,7 @@ NXTLINK="apagktAQg3CpWje"
 # FOG Code during install needs to match with case start of file followed by _DCLinuxAgent.zip
 NXTFOGLINK="3oiWJeBwtQFbHXM"
 extract_folder="EntroCIM"
+pkg_folder="/home/entrocim/install"
 
 clear
 
@@ -108,7 +110,7 @@ echo ""
 echo "Installing EntroCIM pre-requisites..."
 echo ""
 
-apt-get install -y p7zip-full htop default-jre fail2ban -q
+apt-get install -y net-tools p7zip-full htop default-jre fail2ban -q
 
 #Set Fail2Ban Options
 if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
@@ -141,7 +143,7 @@ if [ $fogenabled == "y" ] && [ -z "${CUST_CODE}" ]; then
 fi
 
 # Get Latest EntroCIM Installer, Extract and Copy to $install_path
-if [ -e ~/entrocim/EntroCIM.zip ]; then
+if [ -e $pkg_folder/EntroCIM.zip ]; then
 echo -n "Would you like to retrieve the Latest EntroCIM installer (N/y): "
 read eCIMget
 
@@ -152,36 +154,33 @@ read eCIMget
   eCIMget=`echo $eCIMget | awk '{print tolower($0)}'`
 
   if [ $eCIMget == "y" ]; then
-    mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
-    cd entrocim
+    mkdir -p $pkg_folder && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $pkg_folder/EntroCIM.zip
+    cd $pkg_folder
     7z x EntroCIM.zip -aoa
-    cd ..
-    cp -R ~/entrocim/$extract_folder/* $install_path/
+    cp -R $pkg_folder/$extract_folder/* $install_path/
     chown -R entrocim:entrocim $install_path/
   fi
 else
-  mkdir -p ~/entrocim && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O ~/entrocim/EntroCIM.zip
-  cd entrocim
+  mkdir -p $pkg_folder && wget https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$NXTLINK/download -O $pkg_folder/EntroCIM.zip
+  cd $pkg_folder
   7z x EntroCIM.zip -aoa
-  cd ..
-  cp -R ~/entrocim/$extract_folder/* $install_path/
+  cp -R $pkg_folder/$extract_folder/* $install_path/
   chown -R entrocim:entrocim $install_path/
 fi
 
 if [ $fogenabled == "y" ]; then
-  mkdir -p ~/entrocim && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O ~/entrocim/$custcode"_DCLinuxAgent".zip
-  cd entrocim
+  mkdir -p $pkg_folder && wget "https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/"$NXTFOGLINK"/download?path=%2F&files="$custcode"_DCLinuxAgent".zip -O $pkg_folder/$custcode"_DCLinuxAgent".zip
+  cd $pkg_folder
   7z x $custcode"_DCLinuxAgent".zip -aoa
   chmod +x DesktopCentral_LinuxAgent.bin
   ./DesktopCentral_LinuxAgent.bin
-  cd ..
 fi
 
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
   GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/3Q9bZNR6WeSGNAD/download -O ~/entrocim/podupdate.zip
-  cd entrocim
+  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/3Q9bZNR6WeSGNAD/download -O /home/entrocim/podupdate.zip
+  cd /home/entrocim
   7z e podupdate.zip -aoa -p$GETVAR1
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
   cp podupdate.log /home/entrocim/.ssh/id_rsa
