@@ -41,10 +41,10 @@ elif [ -d "$install_path" ]; then
   tput sgr 0
   eCIMins=`echo $eCIMins | awk '{print tolower($0)}'`
   if [ $eCIMins == "n" ]; then
-    echo -e "$(tput setaf 3)"
+    tput setaf 3
     echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
     read install_path
-    echo -e "$(tput sgr 0)"
+    tput sgr 0
     echo -e "$(tput setaf 2)\nNew Install Path $install_path\n$(tput sgr 0)"
     if [ ! -d "$install_path" ]; then
       echo -e "$(tput setaf 1)Install location does not exist... Exiting$(tput sgr 0)\n"
