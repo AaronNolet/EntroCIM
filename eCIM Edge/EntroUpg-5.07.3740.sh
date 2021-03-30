@@ -45,7 +45,7 @@ elif [ -d "$install_path" ]; then
     echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
     read install_path
     tput sgr 0
-    echo -e "$(tput setaf 2)\nNew Install Path $install_path\n$(tput sgr 0)"
+    echo -e "$(tput setaf 2)New Install Path set to '$install_path'\n$(tput sgr 0)"
     if [ ! -d "$install_path" ]; then
       echo -e "$(tput setaf 1)Install location does not exist... Exiting$(tput sgr 0)\n"
       exit
@@ -55,14 +55,15 @@ fi
 if [ $eCIMins == "y" ]; then
   eCIMupg="y"
 else
-  echo -n "$(tput setaf 3)Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): $(tput sgr 0)"
+  tput setaf 3
+  echo -n "Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): "
   read eCIMupg
   eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
-  echo ""
+  tput sgr 0
 fi
 
 if [ ! -d "$install_path/lib" ] || [ ! -d "$install_path/var" ]; then
-  echo -e "$(tput setaf 1)Install location subfolders do not exist... Exiting$(tput sgr 0)\n"
+  echo -e "$(tput setaf 1)Install location Sub-Folders do not exist... Exiting$(tput sgr 0)\n"
   exit
 fi
 
