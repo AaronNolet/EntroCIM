@@ -21,7 +21,6 @@ clear
 echo -e "$(tput setaf 6)**********************************"
 echo -e "***     EntroCIM Updater       ***"
 echo -e "**********************************\n\n$(tput sgr 0)"
-echo
 
 
 if [ ! -d "$install_path" ]; then
@@ -35,8 +34,8 @@ if [ ! -d "$install_path" ]; then
   fi
 
 elif [ -d "$install_path" ]; then
-  echo -e "$(tput setaf 2)Found default install location of $install_path$(tput sgr 0)\n\n"
-  echo -n "Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): "
+  echo -e "$(tput setaf 2)Found default install location of $install_path\n\n$(tput sgr 0)"
+  echo -n "$(tput setaf 3)Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): $(tput sgr 0)"
   read eCIMins
   eCIMins=`echo $eCIMins | awk '{print tolower($0)}'`
   if [ $eCIMins == "n" ]; then
