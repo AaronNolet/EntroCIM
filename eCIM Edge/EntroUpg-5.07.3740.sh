@@ -15,8 +15,17 @@ install_path="/opt/entrocim"
 extract_folder="EntroCIM"
 pkg_folder="/home/entrocim/upgrade"
 
+
+clear
+
+echo -e "$(tput setaf 6)**********************************"
+echo -e "***     EntroCIM Updater       ***"
+echo -e "**********************************$(tput sgr 0)/n/n"
+echo
+
+
 if [ ! -d "$install_path" ]; then
-  echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
+  echo -n "$(tput setaf 6)Please Specify the Entrocim install location i.e. '$install_path' : $(tput sgr 0)"
   read install_path
   if [ ! -d "$install_path" ]; then
     echo -e "$(tput setaf 1)Install location does not exist... Exiting$(tput sgr 0)\n"
@@ -31,9 +40,9 @@ elif [ -d "$install_path" ]; then
   read eCIMins
   eCIMins=`echo $eCIMins | awk '{print tolower($0)}'`
   if [ $eCIMins == "n" ]; then
-    echo -n "Please Specify the Entrocim install location i.e. '$install_path' : "
+    echo -n "$(tput setaf 3)Please Specify the Entrocim install location i.e. '$install_path' : $(tput sgr 0)"
     read install_path
-    echo -e "New Install Path $install_path\n"
+    echo -e "\nNew Install Path $install_path\n"
     if [ ! -d "$install_path" ]; then
       echo -e "$(tput setaf 1)Install location does not exist... Exiting$(tput sgr 0)\n"
       exit
@@ -43,9 +52,10 @@ fi
 if [ $eCIMins == "y" ]; then
   eCIMupg="y"
 else
-  echo -n "Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): "
+  echo -n "$(tput setaf 3)Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): $(tput sgr 0)"
   read eCIMupg
   eCIMupg=`echo $eCIMupg | awk '{print tolower($0)}'`
+  echo ""
 fi
 
 if [ ! -d "$install_path/lib" ] || [ ! -d "$install_path/var" ]; then
