@@ -35,7 +35,9 @@ if [ ! -d "$install_path" ]; then
 
 elif [ -d "$install_path" ]; then
   echo -e "$(tput setaf 2)Found default install location of $install_path\n\n$(tput sgr 0)"
-  echo -en "$(tput setaf 3)Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): $(tput sgr 0)"
+  echo -e "$(tput setaf 3)"
+  echo -n "Would you like to upgrade the EntroCIM instance located @ $install_path (N/y): "
+  echo -e "$(tput sgr 0)"
   read eCIMins
   eCIMins=`echo $eCIMins | awk '{print tolower($0)}'`
   if [ $eCIMins == "n" ]; then
