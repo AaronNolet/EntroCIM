@@ -12,6 +12,7 @@ HOSTNAME=$(hostname)
 # 5.0.5.3161_FoS "apagktAQg3CpWje"
 NXTLINK="djkDr5xxrqAPaES"
 
+
 # FOG Code during install needs to match with case start of file followed by _DCLinuxAgent.zip
 NXTFOGLINK="3oiWJeBwtQFbHXM"
 extract_folder="EntroCIM"
