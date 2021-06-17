@@ -1,6 +1,6 @@
 #!/bin/bash
 # Stop on error
-set -e
+set -x
 # Install a trap to catch errors and clean-up temp files
 trap 'echo "Installer terminated. Exit.";' INT TERM EXIT
 # rm -f -r ./.tmp/'
