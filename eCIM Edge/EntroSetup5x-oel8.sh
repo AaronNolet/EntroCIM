@@ -43,7 +43,7 @@ if ! $hasUser; then
     echo "Creating 'entrocim' user"
     echo ""
     groupadd -f entrocim > /dev/null
-    adduser --system --gid entrocim entrocim > /dev/null
+    adduser --system --gid entrocim entrocim --home-dir /home/entrocim > /dev/null
 fi
 
 echo -n "Enter location for EntroCIM (/opt/entrocim): "
@@ -126,22 +126,6 @@ wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 yum install -y epel-release-latest-8.noarch.rpm -q
 yum update
 yum install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban -q
-
-#Set Fail2Ban Options
-if grep -Fxq "bantime  = -1" /etc/fail2ban/jail.conf; then
-  echo "Fail2Ban Already Exists and is Configured"
-  echo ""
-else
-  if [ -e /etc/fail2ban/jail.conf ]; then
-    sed -i -e 's/bantime  = 600/bantime  = -1/g' /etc/fail2ban/jail.conf
-    echo "Auto Configuration of Fail2Ban has succeeded..."
-    echo ""
-    service fail2ban restart
-  else
-    echo "Problem with Auto Configuration of Fail2Ban"
-    echo ""
-  fi
-fi
 
 #Set Java environment var
 if [ -z "${JAVA_HOME}" ]; then
