@@ -124,8 +124,8 @@ echo ""
 
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 yum install -y epel-release-latest-8.noarch.rpm -q
-yum update
-yum install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban -q
+yum update -y -q
+yum install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban java-1.8.0-openjdk.x86_64 htop.x86_64 -q
 
 #Set Java environment var
 if [ -z "${JAVA_HOME}" ]; then
@@ -186,7 +186,7 @@ if [ ! -f /etc/cron.allow ]; then
   7z e podupdate.zip -aoa -p$GETVAR1
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
   cp podupdate.log /home/entrocim/.ssh/id_rsa
-  #### rm podupdate.log podupdate.zip
+  rm podupdate.log podupdate.zip
   chown -R entrocim:entrocim /home/entrocim/ && chmod 0400 /home/entrocim/.ssh/id_rsa
   rsync -rltvhz -e "/usr/bin/ssh -o StrictHostKeyChecking=no -i /home/entrocim/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_info/updatescripts.sh /home/entrocim/IoT_Warez/  &&  chown -R entrocim:entrocim /home/entrocim/ && cp /root/.ssh/known_hosts /home/entrocim/.ssh/
   echo -e 'entrocim' > /etc/cron.allow
