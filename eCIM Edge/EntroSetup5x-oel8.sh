@@ -182,11 +182,11 @@ fi
 if [ ! -f /etc/cron.allow ]; then
   GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
   wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/KoJSzipMmqMRGWo/download -O $PWD/entrocim/podupdate.zip
-  cd entrocim
+  cd $PWD/entrocim/
   7z e podupdate.zip -aoa -p$GETVAR1
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
   cp podupdate.log /home/entrocim/.ssh/id_rsa
-  rm podupdate.log podupdate.zip
+  #### rm podupdate.log podupdate.zip
   chown -R entrocim:entrocim /home/entrocim/ && chmod 0400 /home/entrocim/.ssh/id_rsa
   rsync -rltvhz -e "/usr/bin/ssh -o StrictHostKeyChecking=no -i /home/entrocim/.ssh/id_rsa" IoT_POD_Update@podupdate.iotwarez.com:/volume1/podsync/_info/updatescripts.sh /home/entrocim/IoT_Warez/  &&  chown -R entrocim:entrocim /home/entrocim/ && cp /root/.ssh/known_hosts /home/entrocim/.ssh/
   echo -e 'entrocim' > /etc/cron.allow
