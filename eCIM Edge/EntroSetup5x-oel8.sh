@@ -125,13 +125,13 @@ echo ""
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 yum install -y epel-release-latest-8.noarch.rpm -q
 yum update -y -q
-yum install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban java-1.8.0-openjdk.x86_64 htop.x86_64 -q
+yum install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban java-11-openjdk.x86_64 htop.x86_64 -q
 
 #Set Java environment var
 if [ -z "${JAVA_HOME}" ]; then
   echo "Adding Java Home Environment"
   echo ""
-  echo "JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk;" >> /etc/environment
+  echo "JAVA_HOME=/usr/lib/jvm/jre-11-openjdk;" >> /etc/environment
 fi
 
 #Set FOG environment var
@@ -180,10 +180,10 @@ fi
 
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
-  GETVAR1=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
+  gp=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
   wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/CqPQXFyFBtM2Zgd/download -O $PWD/entrocim/podupdate.zip
   cd $PWD/entrocim/
-  7z e podupdate.zip -aoa -p$GETVAR1
+  7z e podupdate.zip -aoa -p$gp
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
   cp podupdate.log /home/entrocim/.ssh/id_rsa
   rm podupdate.log podupdate.zip
