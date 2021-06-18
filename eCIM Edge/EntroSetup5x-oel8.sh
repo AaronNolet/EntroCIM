@@ -262,13 +262,13 @@ StartLimitIntervalSec=0
 [Service]
 Type=simple
 PIDFile=/var/run/entrocim.pid
-WorkingDirectory=$HomeFolder
+WorkingDirectory='$HomeFolder'
 User=entrocim
 Group=entrocim
 Restart=always
 TimeoutStartSec=1min
 RestartSec=1min
-ExecStart=/usr/bin/$JRE -cp $HomeFolder/lib/java/sys.jar:$HomeFolder/lib/java/jline.jar: -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost >>/var/log/entrocim.log
+ExecStart=/usr/bin/'$JRE' -cp '$HomeFolder'/lib/java/sys.jar: -Dfan.home='$HomeFolder' fanx.tools.Fan finStackHost >>/var/log/entrocim.log
 KillMode=process
 LimitNOFILE=200000
 
