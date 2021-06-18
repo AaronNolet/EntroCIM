@@ -245,13 +245,13 @@ auto_start=`echo $auto_start | awk '{print tolower($0)}'`
 if [ $auto_start == "y" ]; then
 
   # set maximum memory allocated for EntroCIM
-  HeapSize="'$heapmax'"
+  HeapSize=$heapmax
   # set the HTTP port EntroCIM listen on
-  PortNumber="'$port'"
+  PortNumber=$port
   # set the EntroCIM home folder
-  HomeFolder='$install_path'
+  HomeFolder=$install_path
 
-  JRE="java -Xmx$HeapSize"
+  JRE="java -Xmx"$HeapSize
 
 echo '
 [Unit]
