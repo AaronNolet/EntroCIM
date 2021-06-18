@@ -251,8 +251,6 @@ if [ $auto_start == "y" ]; then
   # set the EntroCIM home folder
   HomeFolder=$install_path
 
-  JRE="java -Xmx"$HeapSize
-
 echo '
 [Unit]
 Description=EntroCIM
@@ -268,7 +266,7 @@ Group=entrocim
 Restart=always
 TimeoutStartSec=1min
 RestartSec=1min
-ExecStart=/usr/bin/'$JRE' -cp '$HomeFolder'/lib/java/sys.jar: -Dfan.home='$HomeFolder' fanx.tools.Fan finStackHost >>/var/log/entrocim.log
+ExecStart=/usr/bin/java -Xmx'$HeapSize' -cp '$HomeFolder'/lib/java/sys.jar: -Dfan.home='$HomeFolder' fanx.tools.Fan finStackHost >>/var/log/entrocim.log
 KillMode=process
 LimitNOFILE=200000
 
