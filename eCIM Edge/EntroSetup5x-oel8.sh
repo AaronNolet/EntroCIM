@@ -244,93 +244,36 @@ auto_start=`echo $auto_start | awk '{print tolower($0)}'`
 
 if [ $auto_start == "y" ]; then
 
-echo '#!/bin/sh
-### BEGIN INIT INFO
-# Provides:          EntroCIM AI Platform Service
-# Required-Start:    $ALL
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start daemon at boot time
-# Description:       Enable service provided by daemon.
-### END INIT INFO
-# /etc/init.d/entrocim
+  # set maximum memory allocated for EntroCIM
+  HeapSize="'$heapmax'"
+  # set the HTTP port EntroCIM listen on
+  PortNumber="'$port'"
+  # set the EntroCIM home folder
+  HomeFolder='$install_path'
 
-# set maximum memory allocated for EntroCIM
-HeapSize="'$heapmax'"
-# set the HTTP port EntroCIM listen on
-PortNumber="'$port'"
-# set the EntroCIM home folder
-HomeFolder='$install_path'
+  JRE="java -Xmx$HeapSize"
 
-JRE="java -Xmx$HeapSize"
-StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar: -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost"
+echo '
+[Unit]
+Description=EntroCIM
+After=network.target
+StartLimitIntervalSec=0
 
-PIDFile="/var/run/entrocim.pid"
-LogFile="/var/log/entrocim.log"
-# Touch the lock file
-touch $PIDFile
+[Service]
+Type=simple
+PIDFile=/var/run/entrocim.pid
+WorkingDirectory=$HomeFolder
+User=entrocim
+Group=entrocim
+Restart=always
+TimeoutStartSec=1min
+RestartSec=1min
+ExecStart=/usr/bin/$JRE -cp $HomeFolder/lib/java/sys.jar:$HomeFolder/lib/java/jline.jar: -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost >>/var/log/entrocim.log
+KillMode=process
+LimitNOFILE=200000
 
-# Determine user command
-case "$1" in
-  start)
-    echo "Starting EntroCIM AI"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       $StartCMD >> $LogFile 2>&1 &
-       echo $! > /var/run/entrocim.pid
-       exit 0
-    else
-       echo EntroCIM AI Service runs with pid: $CurPID
-       echo type "/etc/init.d/entrocim stop" to stop it first.
-       exit 1
-    fi
-    ;;
-  stop)
-    echo "Stopping EntroCIM AI"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       echo EntroCIM AI is already stopped.
-    else
-      kill $CurPID
-      rm $PIDFile
-    fi
-    ;;
-  restart)
-    echo "Restarting EntroCIM AI"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       $StartCMD >> $LogFile 2>&1 &
-       echo $! > /var/run/entrocim.pid
-       echo EntroCIM AI is restarted.
-       exit 0
-    else
-      kill $CurPID
-      rm $PIDFile
-      $StartCMD >> $LogFile 2>&1 &
-      echo $! > /var/run/entrocim.pid
-      echo EntroCIM AI is restarted.
-      exit 0
-    fi
-    ;;
-  status)
-    echo "EntroCIM AI"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       echo is stopped.
-       exit 3
-    else
-      echo is running.
-      exit 0
-    fi
-    ;;
-  *)
-    echo "Usage: /etc/init.d/entrocim {start|stop|restart|status}"
-    exit 1
-    ;;
-esac
-
-exit 0' > /etc/init.d/entrocim
+[Install]
+WantedBy=multi-user.target' > /etc/init.d/entrocim
 chmod 755 /etc/init.d/entrocim
 
 # bind the service
