@@ -237,7 +237,7 @@ else
   echo "Problem with Auto Configuration of Port"
 fi
 
-echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar:/lib/java/jline.jar: -Dfan.home=../ fanx.tools.Fan finStackHost  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
+echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar -Dfan.home=../ fanx.tools.Fan finStackHost  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
 chmod +x $install_path/bin/start.sh
 
 auto_start=`echo $auto_start | awk '{print tolower($0)}'`
@@ -247,7 +247,7 @@ if [ $auto_start == "y" ]; then
 echo '#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          EntroCIM AI Platform Service
-# Required-Start:    $remote_fs $syslog $network
+# Required-Start:    $ALL
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
@@ -363,7 +363,7 @@ fi
 echo '#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          Auto restart service on file change for EntroCIM
-# Required-Start:    $ALL
+# Required-Start:    $remote_fs $syslog $network
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
