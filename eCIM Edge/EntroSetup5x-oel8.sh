@@ -44,7 +44,7 @@ NXTLINK="djkDr5xxrqAPaES"
 NXTFOGLINK="3oiWJeBwtQFbHXM"
 extract_folder="EntroCIM"
 
-clear
+#clear
 
 echo "**********************************"
 echo "***     EntroCIM Installer     ***"
