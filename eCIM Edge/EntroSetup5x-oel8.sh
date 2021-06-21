@@ -12,27 +12,17 @@ fi
 
 #Set Vars
 source /etc/os-release
-
-if [[ $ID == "ol" ]]
-then
+if [[ $ID == "ubuntu" ]]; then
+  OSFW="ufw"
+  if [[ $VERSION_ID == 18.04 ]]; then
+  elif [[ $VERSION_ID == 20.04 ]]; then
+  fi
+elif [[ $ID == "ol" ]]; then
   OSFW="firewalld"
-  if [[ $VERSION_ID == 7.0 ]]
-  then
-    echo "In 1"
-  elif [[ $VERSION_ID == 8.4 ]]
-  then
-    echo "In 2"
+  if [[ $VERSION_ID == 7.0 ]]; then
+  elif [[ $VERSION_ID == 8.4 ]]; then
   fi
 fi
-#if [[ $ID == "ol" ]]; then
-#  if [[ $VERSION_ID == "7.0" ]]; then
-#  elif [[ $VERSION_ID == "8.4" ]]; then
-#  fi
-#  OSFW="firewalld"
-#fi
-
-
-
 
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
