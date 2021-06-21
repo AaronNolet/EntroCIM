@@ -14,16 +14,16 @@ fi
 source /etc/os-release
 
 if [ $ID == "ubuntu" ]; then
-  if [ $VERSION_ID -eq 18.04 ]; then
+  if [ $VERSION_ID == 18.04 ]; then
 
-  elif [ $VERSION_ID -eq 20.04 ]; then
+  elif [ $VERSION_ID == 20.04 ]; then
 
   fi
   OSFW="ufw"
 elif [ $ID == "ol" ]; then
-  if [ $VERSION_ID -eq 7.0 ]; then
+  if [ $VERSION_ID == 7.0 ]; then
 
-  elif [ $VERSION_ID -eq 8.4 ]; then
+  elif [ $VERSION_ID == 8.4 ]; then
 
   fi
   OSFW="firewalld"
