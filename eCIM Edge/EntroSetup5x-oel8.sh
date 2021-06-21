@@ -10,6 +10,8 @@ if (( $EUID != 0 )); then
     exit
 fi
 
+source /etc/os-release
+
 #Set Vars
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
@@ -26,6 +28,8 @@ clear
 echo "**********************************"
 echo "***     EntroCIM Installer     ***"
 echo "**********************************"
+echo ""
+echo "Installing EntroCIM AI on $PRETTY_NAME..."
 echo ""
 
 cDIR='PWD'
