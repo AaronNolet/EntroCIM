@@ -17,7 +17,9 @@ if [[ $ID == "ubuntu" ]]; then
   if [[ $VERSION_ID == 18.04 ]]; then
   elif [[ $VERSION_ID == 20.04 ]]; then
   fi
-elif [[ $ID == "ol" ]]; then
+fi
+
+if [[ $ID == "ol" ]]; then
   OSFW="firewalld"
   if [[ $VERSION_ID == 7.0 ]]; then
   elif [[ $VERSION_ID == 8.4 ]]; then
