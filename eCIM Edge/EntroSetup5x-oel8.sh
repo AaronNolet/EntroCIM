@@ -10,9 +10,28 @@ if (( $EUID != 0 )); then
     exit
 fi
 
+#Set Vars
 source /etc/os-release
 
-#Set Vars
+if [ $ID == 'ubuntu' ]; then
+  if [ $VERSION_ID == '18.04' ]; then
+
+  elif [ $VERSION_ID == '20.04' ]; then
+
+  fi
+  OSFW="ufw"
+elif [ $ID == 'ol']; then
+  if [ $VERSION_ID == '' ]; then
+
+  elif [ $VERSION_ID == '8.4' ]; then
+
+  fi
+  OSFW="firewalld"
+fi
+
+
+
+
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
 # 5.0.7.3740_FoS "djkDr5xxrqAPaES"
@@ -29,7 +48,7 @@ echo "**********************************"
 echo "***     EntroCIM Installer     ***"
 echo "**********************************"
 echo ""
-echo "Installing EntroCIM AI on $PRETTY_NAME..."
+echo "Installing EntroCIM AI on $PRETTY_NAME with $OSFW Firewall..."
 echo ""
 
 cDIR='PWD'
