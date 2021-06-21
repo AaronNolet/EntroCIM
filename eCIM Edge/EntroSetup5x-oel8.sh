@@ -13,14 +13,14 @@ fi
 #Set Vars
 source /etc/os-release
 
-if [ $ID = "ubuntu" ] ; then
-  if [ $VERSION_ID -eq 18.04 ] ; then
+if [[ $ID == "ol" ]]; then
+  OSFW="firewalld"
+  if [[ $VERSION_ID == "7.0" ]]; then
+    #statements
+  elif [[ $VERSION_ID == "8.4" ]]; then
+    #statements
   fi
-  if [ $VERSION_ID -eq 20.04 ] ; then
-  fi
-  OSFW="ufw"
 fi
-
 #if [[ $ID == "ol" ]]; then
 #  if [[ $VERSION_ID == "7.0" ]]; then
 #  elif [[ $VERSION_ID == "8.4" ]]; then
