@@ -20,12 +20,12 @@ if [[ $ID == "ubuntu" ]]; then
   OSFW="ufw"
 fi
 
-if [[ $ID == "ol" ]]; then
-  if [[ $VERSION_ID == "7.0" ]]; then
-  elif [[ $VERSION_ID == "8.4" ]]; then
-  fi
-  OSFW="firewalld"
-fi
+#if [[ $ID == "ol" ]]; then
+#  if [[ $VERSION_ID == "7.0" ]]; then
+#  elif [[ $VERSION_ID == "8.4" ]]; then
+#  fi
+#  OSFW="firewalld"
+#fi
 
 
 
