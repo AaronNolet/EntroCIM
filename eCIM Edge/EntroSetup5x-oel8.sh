@@ -14,6 +14,7 @@ fi
 source /etc/os-release
 if [[ $ID == "ubuntu" ]]; then
   OSFW="ufw"
+  INST_CMD="apt-get"
   if [[ $VERSION_ID == 18.04 ]]; then
     OSID="$ID $VERSION_ID"
   elif [[ $VERSION_ID == 20.04 ]]; then
@@ -21,10 +22,13 @@ if [[ $ID == "ubuntu" ]]; then
   fi
 elif [[ $ID == "ol" ]]; then
   OSFW="firewalld"
+  INST_CMD="yum"
   if [[ $VERSION_ID == 7.0 ]]; then
     OSID="$ID $VERSION_ID"
   elif [[ $VERSION_ID == 8.4 ]]; then
     OSID="$ID $VERSION_ID"
+    REPO_SRC="https://dl.fedoraproject.org/pub/epel/"
+    REPO_REL="epel-release-latest-8.noarch.rpm"
   fi
 fi
 
@@ -143,10 +147,10 @@ fi
 echo "Installing EntroCIM pre-requisites..."
 echo ""
 
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-yum install -y epel-release-latest-8.noarch.rpm -q
-yum update -y -q
-yum install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban java-11-openjdk.x86_64 htop.x86_64 -q
+wget $REPO_SRC$REPO_REL
+$INST_CMD install -y $REPO_REL -q
+$INST_CMD update -y -q
+$INST_CMD install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban java-11-openjdk.x86_64 htop.x86_64 -q
 
 #Set Java environment var
 if [ -z "${JAVA_HOME}" ]; then
