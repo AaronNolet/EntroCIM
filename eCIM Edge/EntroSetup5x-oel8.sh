@@ -15,19 +15,19 @@ source /etc/os-release
 if [[ $ID == "ubuntu" ]]; then
   OSFW="ufw"
   INST_CMD="apt-get"
-  if [[ $VERSION_ID == 18.04 ]]; then
+  if [[ $VERSION_ID -gt 18 ]] && [[ $VERSION_ID -lt 19 ]]; then
     OSID="$ID $VERSION_ID"
-  elif [[ $VERSION_ID == 20.04 ]]; then
+  elif [[ $VERSION_ID -gt 20 ]] && [[ $VERSION_ID -lt 21 ]]; then
     OSID="$ID $VERSION_ID"
   fi
 elif [[ $ID == "ol" ]]; then
   OSFW="firewalld"
   INST_CMD="yum"
   REPO_SRC="https://dl.fedoraproject.org/pub/epel/"
-  if [[ $VERSION_ID == 7.0 ]]; then
+  if [[ $VERSION_ID -gt 7 ]] && [[ $VERSION_ID -lt 8 ]]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-7.noarch.rpm"
-  elif [[ $VERSION_ID == 8.4 ]]; then
+  elif [[ $VERSION_ID -gt 8 ]] && [[ $VERSION_ID -lt 9 ]]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-8.noarch.rpm"
   fi
