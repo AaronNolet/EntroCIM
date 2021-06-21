@@ -15,16 +15,20 @@ source /etc/os-release
 if [[ $ID == "ubuntu" ]]; then
   OSFW="ufw"
   if [[ $VERSION_ID == 18.04 ]]; then
+    OSID="$ID $VERSION_ID"
   elif [[ $VERSION_ID == 20.04 ]]; then
+    OSID="$ID $VERSION_ID"
+  fi
+elif [[ $ID == "ol" ]]; then
+  OSFW="firewalld"
+  if [[ $VERSION_ID == 7.0 ]]; then
+    OSID="$ID $VERSION_ID"
+  elif [[ $VERSION_ID == 8.4 ]]; then
+    OSID="$ID $VERSION_ID"
   fi
 fi
 
-if [[ $ID == "ol" ]]; then
-  OSFW="firewalld"
-  if [[ $VERSION_ID == 7.0 ]]; then
-  elif [[ $VERSION_ID == 8.4 ]]; then
-  fi
-fi
+echo "Installing on: $OSID"
 
 HOSTNAME=$(hostname)
 #EntroCIM NXTLINK Versions:
