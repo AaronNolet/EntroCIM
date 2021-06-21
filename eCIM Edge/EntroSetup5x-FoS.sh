@@ -274,7 +274,7 @@ PortNumber="'$port'"
 HomeFolder='$install_path'
 
 JRE="java -Xmx$HeapSize"
-StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar:$HomeFolder/lib/java/jline.jar: -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost"
+StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost"
 
 PIDFile="/var/run/entrocim.pid"
 LogFile="/var/log/entrocim.log"
