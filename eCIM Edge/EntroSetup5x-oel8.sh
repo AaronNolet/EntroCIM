@@ -18,10 +18,10 @@ then
   OSFW="firewalld"
   if [[ $VERSION_ID == "7.0" ]]
   then
-    #statements
+    echo "In 1"
   elif [[ $VERSION_ID == "8.4" ]]
   then
-    #statements
+    echo "In 2"
   fi
 fi
 #if [[ $ID == "ol" ]]; then
