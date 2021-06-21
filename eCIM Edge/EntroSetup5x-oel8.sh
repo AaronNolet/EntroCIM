@@ -24,10 +24,10 @@ elif [[ $ID == "ol" ]]; then
   OSFW="firewalld"
   INST_CMD="yum"
   REPO_SRC="https://dl.fedoraproject.org/pub/epel/"
-  if [[ $VERSION_ID -gt 7 ]] && [[ $VERSION_ID -lt 8 ]]; then
+  if [[ $VERSION_ID -gt 7.0 ]] && [[ $VERSION_ID -lt 8.0 ]]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-7.noarch.rpm"
-  elif [[ $VERSION_ID -gt 8 ]] && [[ $VERSION_ID -lt 9 ]]; then
+  elif [[ $VERSION_ID -gt 8.0 ]] && [[ $VERSION_ID -lt 9.0 ]]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-8.noarch.rpm"
   fi
