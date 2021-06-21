@@ -12,24 +12,23 @@ fi
 
 #Set Vars
 source /etc/os-release
-VERSION_ID_INT=$(declare -i $VERSION_ID)
 
 if [[ $ID == "ubuntu" ]]; then
   OSFW="ufw"
   INST_CMD="apt-get"
-  if [[ $VERSION_ID_INT -gt 18 ]] && [[ $VERSION_ID_INT -lt 19 ]]; then
+  if [ $(echo " 18 > $VERSION_ID " | bc -l ) ] && [ $(echo " 19 < $VERSION_ID " | bc -l ) ]; then
     OSID="$ID $VERSION_ID"
-  elif [[ $VERSION_ID_INT -gt 20 ]] && [[ $VERSION_ID_INT -lt 21 ]]; then
+  if [ $(echo " 20 > $VERSION_ID " | bc -l ) ] && [ $(echo " 21 < $VERSION_ID " | bc -l ) ]; then
     OSID="$ID $VERSION_ID"
   fi
 elif [[ $ID == "ol" ]]; then
   OSFW="firewalld"
   INST_CMD="yum"
   REPO_SRC="https://dl.fedoraproject.org/pub/epel/"
-  if [[ $(echo " 7 > $VERSION_ID " | bc -l ) ] && [ $(echo " 8 < $VERSION_ID " | bc -l ) ]]; then
+  if [ $(echo " 7 > $VERSION_ID " | bc -l ) ] && [ $(echo " 8 < $VERSION_ID " | bc -l ) ]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-7.noarch.rpm"
-  elif [[ $(echo " 8 > $VERSION_ID " | bc -l ) ] && [ $(echo " 9 < $VERSION_ID " | bc -l ) ]]; then
+  elif [ $(echo " 8 > $VERSION_ID " | bc -l ) ] && [ $(echo " 9 < $VERSION_ID " | bc -l ) ]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-8.noarch.rpm"
   fi
