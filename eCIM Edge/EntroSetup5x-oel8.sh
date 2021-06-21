@@ -15,9 +15,9 @@ source /etc/os-release
 
 if [ $ID = "ubuntu" ] ; then
 
-  if [ $VERSION_ID = "18.04" ] ; then
+  if [ $VERSION_ID -eq 18.04 ] ; then
 
-  elif [ $VERSION_ID = "20.04" ] ; then
+  elif [ $VERSION_ID -eq 20.04 ] ; then
 
   fi
 
