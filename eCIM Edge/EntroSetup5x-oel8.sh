@@ -13,11 +13,14 @@ fi
 #Set Vars
 source /etc/os-release
 
-if [[ $ID == "ol" ]]; then
+if [[ $ID == "ol" ]]
+then
   OSFW="firewalld"
-  if [[ $VERSION_ID == "7.0" ]]; then
+  if [[ $VERSION_ID == "7.0" ]]
+  then
     #statements
-  elif [[ $VERSION_ID == "8.4" ]]; then
+  elif [[ $VERSION_ID == "8.4" ]]
+  then
     #statements
   fi
 fi
