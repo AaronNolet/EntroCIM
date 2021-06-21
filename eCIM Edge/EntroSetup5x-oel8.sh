@@ -12,22 +12,24 @@ fi
 
 #Set Vars
 source /etc/os-release
+VERSION_ID_INT=$(declare -i $VERSION_ID)
+
 if [[ $ID == "ubuntu" ]]; then
   OSFW="ufw"
   INST_CMD="apt-get"
-  if [[ $VERSION_ID -gt 18 ]] && [[ $VERSION_ID -lt 19 ]]; then
+  if [[ $VERSION_ID_INT -gt 18 ]] && [[ $VERSION_ID_INT -lt 19 ]]; then
     OSID="$ID $VERSION_ID"
-  elif [[ $VERSION_ID -gt 20 ]] && [[ $VERSION_ID -lt 21 ]]; then
+  elif [[ $VERSION_ID_INT -gt 20 ]] && [[ $VERSION_ID_INT -lt 21 ]]; then
     OSID="$ID $VERSION_ID"
   fi
 elif [[ $ID == "ol" ]]; then
   OSFW="firewalld"
   INST_CMD="yum"
   REPO_SRC="https://dl.fedoraproject.org/pub/epel/"
-  if [[ $VERSION_ID -gt 7.0 ]] && [[ $VERSION_ID -lt 8.0 ]]; then
+  if [[ $VERSION_ID_INT -gt 7.0 ]] && [[ $VERSION_ID_INT -lt 8.0 ]]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-7.noarch.rpm"
-  elif [[ $VERSION_ID -gt 8.0 ]] && [[ $VERSION_ID -lt 9.0 ]]; then
+  elif [[ $VERSION_ID_INT -gt 8.0 ]] && [[ $VERSION_ID_INT -lt 9.0 ]]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-8.noarch.rpm"
   fi
@@ -59,6 +61,7 @@ GETFWZONE=$(firewall-cmd --get-default-zone)
 
 echo "Currently Ative Firewall Zone: $GETFWZONE"
 echo ""
+exit 5
 
 # check for entrocim user
 hasUser=false
