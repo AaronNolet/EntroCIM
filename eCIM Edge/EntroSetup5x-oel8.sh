@@ -20,6 +20,7 @@ if [[ $ID == "ubuntu" ]]; then
 
   fi
   OSFW="ufw"
+fi
 
 if [[ $ID == "ol" ]]; then
   if [[ $VERSION_ID == 7.0 ]]; then
