@@ -18,7 +18,7 @@ if [[ $ID == "ubuntu" ]]; then
   INST_CMD="apt-get"
   if [ $(echo " 18 > $VERSION_ID " | bc -l ) ] && [ $(echo " 19 < $VERSION_ID " | bc -l ) ]; then
     OSID="$ID $VERSION_ID"
-  if [ $(echo " 20 > $VERSION_ID " | bc -l ) ] && [ $(echo " 21 < $VERSION_ID " | bc -l ) ]; then
+  elif [ $(echo " 20 > $VERSION_ID " | bc -l ) ] && [ $(echo " 21 < $VERSION_ID " | bc -l ) ]; then
     OSID="$ID $VERSION_ID"
   fi
 elif [[ $ID == "ol" ]]; then
