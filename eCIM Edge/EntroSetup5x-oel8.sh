@@ -16,10 +16,10 @@ source /etc/os-release
 if [[ $ID == "ol" ]]
 then
   OSFW="firewalld"
-  if [[ $VERSION_ID == "7.0" ]]
+  if [[ $VERSION_ID == 7.0 ]]
   then
     echo "In 1"
-  elif [[ $VERSION_ID == "8.4" ]]
+  elif [[ $VERSION_ID == 8.4 ]]
   then
     echo "In 2"
   fi
