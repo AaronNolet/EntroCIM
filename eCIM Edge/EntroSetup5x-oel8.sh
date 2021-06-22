@@ -60,7 +60,6 @@ GETFWZONE=$(firewall-cmd --get-default-zone)
 
 echo "Currently Ative Firewall Zone: $GETFWZONE"
 echo ""
-exit 5
 
 # check for entrocim user
 hasUser=false
