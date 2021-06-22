@@ -338,7 +338,6 @@ chmod +x $install_path/bin/start.sh $install_path/bin/onchange.sh
 
 auto_start=`echo $auto_start | awk '{print tolower($0)}'`
 
-if [ $auto_start == "y" ]; then
 echo '[Unit]
 Description=EntroCIM
 After=syslog.target network.target
@@ -380,14 +379,14 @@ SuccessExitStatus=143
 PIDFile="/var/run/onchange.pid"
 LogFile="/var/log/onchange.log"
 Type=forking
-ExecStart=
+ExecStart=$install_path/bin/onchange.sh
 ExecStop=/bin/kill -15 $MAINPID
 
 [Install]
 WantedBy=multi-user.target'  > /etc/init.d/onchange.service
 chmod 755 /etc/init.d/onchange.service
 
-cho '/var/log/onchange.log {
+echo '/var/log/onchange.log {
 su root root
 minsize 10M
 weekly
@@ -401,6 +400,7 @@ endscript
 }' > /etc/logrotate.d/onchange
 
 # start the service
+if [ $auto_start == "y" ]; then
 systemctl daemon-reload
 systemctl enable entrocim
 systemctl enable onchange
