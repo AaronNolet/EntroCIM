@@ -352,7 +352,7 @@ ExecStart=$install_path/bin/start.sh
 ExecStop=/bin/kill -15 $MAINPID
 
 [Install]
-WantedBy=multi-user.target' > /etc/init.d/entrocim.service
+WantedBy=multi-user.target' > /etc/systemd/system/entrocim.service
 chmod 755 /etc/init.d/entrocim.service
 
 echo '/var/log/entrocim.log {
@@ -382,7 +382,7 @@ ExecStart=$install_path/bin/onchange.sh
 ExecStop=/bin/kill -15 $MAINPID
 
 [Install]
-WantedBy=multi-user.target'  > /etc/init.d/onchange.service
+WantedBy=multi-user.target'  > /etc/systemd/system/onchange.service
 chmod 755 /etc/init.d/onchange.service
 
 echo '/var/log/onchange.log {
