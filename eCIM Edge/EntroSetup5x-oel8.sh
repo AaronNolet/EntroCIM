@@ -25,10 +25,10 @@ elif [[ $ID == "ol" ]]; then
   OSFW="firewalld"
   INST_CMD="yum"
   REPO_SRC="https://dl.fedoraproject.org/pub/epel/"
-  if [ $(echo " 7.0 > $VERSION_ID " | bc -l ) ] && [ $(echo " 7.9 < $VERSION_ID " | bc -l ) ]; then
+  if [ $(echo " 7.0 > $VERSION_ID " | bc -l ) && $(echo " 7.9 < $VERSION_ID " | bc -l ) ]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-7.noarch.rpm"
-  elif [ $(echo " 8.0 > $VERSION_ID " | bc -l ) ] && [ $(echo " 8.9 < $VERSION_ID " | bc -l ) ]; then
+  elif [ $(echo " 8.0 > $VERSION_ID " | bc -l ) && $(echo " 8.9 < $VERSION_ID " | bc -l ) ]; then
     OSID="$ID $VERSION_ID"
     REPO_REL="epel-release-latest-8.noarch.rpm"
   fi
