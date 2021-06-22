@@ -266,110 +266,96 @@ else
 fi
 
 echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar:/lib/java/jline.jar: -Dfan.home=../ fanx.tools.Fan finStackHost  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
-chmod +x $install_path/bin/start.sh
+echo '#!/bin/bash
+
+# **********************************************
+# * Check if EntroCIM, Fin or Sky and Set Vars *
+# **********************************************
+
+if systemctl cat skyspark.service > /dev/null 2>&1; then
+  FolderMonitor=$(systemctl cat skyspark.service |grep WorkingDirectory=/|sed 's/WorkingDirectory=//')/lib/fan/
+  SkyFin=Sky
+  PIDname="skyspark.pid"
+elif systemctl cat finstack.service > /dev/null 2>&1; then
+  FolderMonitor=$(cat /etc/init.d/finstack |grep HomeFolder=/|sed 's/HomeFolder=//')/lib/fan/
+  SkyFin=Fin
+  PIDname="finstack.pid"
+elif systemctl cat entrocim.service > /dev/null 2>&1; then
+  FolderMonitor=$(cat /etc/init.d/entrocim |grep HomeFolder=/|sed 's/HomeFolder=//')/lib/fan/
+  SkyFin=eCIM
+  PIDname="entrocim.pid"
+fi
+
+PIDFile="/var/run/$PIDname"
+
+# ******************************************************
+# * Monitor Fan Folder for changes and Restart Service *
+# ******************************************************
+
+ls -l $FolderMonitor > /tmp/watchfile
+
+while true; do
+CurPID=$(cat $PIDFile)
+sleep 10
+ls -l $FolderMonitor > /tmp/watchfile2
+diff -q /tmp/watchfile /tmp/watchfile2 > /dev/null
+if [ $? -ne 0 ] ; then
+  if [ "$SkyFin" == "Fin" ]; then
+    echo date '+%d/%m/%Y %H:%M:%S'
+    echo "Restarting finstack Service"
+    service finstack stop
+    while pgrep java -u entrocim >/dev/null; do
+      sleep 10;
+    done
+    service finstack start
+    echo "Completed..."
+  elif [ "$SkyFin" == "Sky" ]; then
+    echo date '+%d/%m/%Y %H:%M:%S'
+    echo "Restarting skyspark Service"
+    service skyspark stop
+    while pgrep java -u entrocim >/dev/null; do
+      sleep 10;
+    done
+    service skyspark start
+    echo "Completed..."
+  elif [ "$SkyFin" == "eCIM" ]; then
+    echo date '+%d/%m/%Y %H:%M:%S'
+    echo "Restarting EntroCIM Service"
+    service entrocim stop
+    while pgrep java -u entrocim >/dev/null; do
+      sleep 10;
+    done
+    service entrocim start
+    echo "Completed..."
+  fi
+  echo "$PIDFile - $CurPID" > /tmp/PIDlog.log
+fi
+cp /tmp/watchfile2 /tmp/watchfile
+done
+'> $install_path/bin/onchange.sh
+
+chmod +x $install_path/bin/start.sh $install_path/bin/onchange.sh
 
 auto_start=`echo $auto_start | awk '{print tolower($0)}'`
 
 if [ $auto_start == "y" ]; then
-echo '#!/bin/sh
-### BEGIN INIT INFO
-# Provides:          entrocim
-# Required-Start:    $remote_fs $syslog $network
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start daemon at boot time
-# Description:       Enable service provided by daemon.
-### END INIT INFO
-# /etc/init.d/entrocim
+echo '[Unit]
+Description=EntroCIM
+After=syslog.target network.target
 
-# File Open MAX Service Fix - Added by IoT Warez, LLC
-ulimit -Hn 200000
-ulimit -Sn 200000
-
-# set maximum memory allocated for EntroCIM
-HeapSize="'$heapmax'"
-# set the HTTP port EntroCIM listen on
-PortNumber="'$port'"
-# set the EntroCIM home folder
-HomeFolder='$install_path'
-
-JRE="java -Xmx$HeapSize"
-StartCMD="sudo -u entrocim $JRE -cp $HomeFolder/lib/java/sys.jar -Dfan.home=$HomeFolder fanx.tools.Fan finStackHost"
-
+[Service]
+SuccessExitStatus=143
+WorkingDirectory=$install_path
+LimitNOFILE=200000
 PIDFile="/var/run/entrocim.pid"
 LogFile="/var/log/entrocim.log"
-# Touch the lock file
-touch $PIDFile
+Type=forking
+ExecStart=$install_path/bin/start.sh
+ExecStop=/bin/kill -15 $MAINPID
 
-# Determine user command
-case "$1" in
-  start)
-    echo "Starting EntroCIM"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       $StartCMD >> $LogFile 2>&1 &
-       echo $! > /var/run/entrocim.pid
-       exit 0
-    else
-       echo EntroCIM runs with pid: $CurPID
-       echo type "/etc/init.d/entrocim stop" to stop it first.
-       exit 1
-    fi
-    ;;
-  stop)
-    echo "Stopping EntroCIM"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       echo EntroCIM is already stopped.
-    else
-      kill $CurPID
-      rm $PIDFile
-    fi
-    ;;
-  restart)
-    echo "Restarting EntroCIM"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       $StartCMD >> $LogFile 2>&1 &
-       echo $! > /var/run/entrocim.pid
-       echo EntroCIM is restarted.
-       exit 0
-    else
-      kill $CurPID
-      rm $PIDFile
-      $StartCMD >> $LogFile 2>&1 &
-      echo $! > /var/run/entrocim.pid
-      echo EntroCIM is restarted.
-      exit 0
-    fi
-    ;;
-  status)
-    echo "EntroCIM"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       echo is stopped.
-       exit 3
-    else
-      echo is running.
-      exit 0
-    fi
-    ;;
-  *)
-    echo "Usage: /etc/init.d/entrocim {start|stop|restart|status}"
-    exit 1
-    ;;
-esac
-
-exit 0' > /etc/init.d/entrocim
-chmod 755 /etc/init.d/entrocim
-
-# bind the service
-if [ -f "/usr/sbin/update-rc.d" ]; then
-    update-rc.d entrocim defaults > /dev/null
-else
-    chkconfig --add entrocim > /dev/null
-fi
+[Install]
+WantedBy=multi-user.target' > /etc/init.d/entrocim.service
+chmod 755 /etc/init.d/entrocim.service
 
 echo '/var/log/entrocim.log {
 su root root
@@ -384,102 +370,24 @@ postrotate
 endscript
 }' > /etc/logrotate.d/entrocim
 
-# start the service
-/etc/init.d/entrocim restart
-fi
 
+echo '[Unit]
+Description=OnChange
+After=syslog.target network.target
 
-# Create OnChange Service restart on monitored lib/fan Folder
-
-echo '#!/bin/sh
-### BEGIN INIT INFO
-# Provides:          Auto restart service on file change for EntroCIM
-# Required-Start:    $remote_fs $syslog $network
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start daemon at boot time
-# Description:       Enable service provided by daemon.
-### END INIT INFO
-# /etc/init.d/onchange
-
-StartCMD="sudo /home/entrocim/scripts/onchange.sh"
-
+[Service]
+SuccessExitStatus=143
 PIDFile="/var/run/onchange.pid"
 LogFile="/var/log/onchange.log"
-# Touch the lock file
-touch $PIDFile
+Type=forking
+ExecStart=
+ExecStop=/bin/kill -15 $MAINPID
 
-# Determine user command
-case "$1" in
-  start)
-    echo "Starting OnChange"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       $StartCMD >> $LogFile 2>&1 &
-       echo $! > /var/run/onchange.pid
-       exit 0
-    else
-       echo OnChange runs with pid: $CurPID
-       echo type "/etc/init.d/onchange stop" to stop it first.
-       exit 1
-    fi
-    ;;
-  stop)
-    echo "Stopping OnChange"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       echo OnChange is already stopped.
-    else
-      kill $CurPID
-      rm $PIDFile
-    fi
-    ;;
-  restart)
-    echo "Restarting OnChange"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       $StartCMD >> $LogFile 2>&1 &
-       echo $! > /var/run/onchange.pid
-       echo OnChange is restarted.
-       exit 0
-    else
-      kill $CurPID
-      rm $PIDFile
-      $StartCMD >> $LogFile 2>&1 &
-      echo $! > /var/run/onchange.pid
-      echo OnChange is restarted.
-      exit 0
-    fi
-    ;;
-  status)
-    echo "OnChange"
-    CurPID=`cat $PIDFile`
-    if [ -z "$CurPID" ]; then
-       echo is stopped.
-       exit 3
-    else
-      echo is running.
-      exit 0
-    fi
-    ;;
-  *)
-    echo "Usage: /etc/init.d/onchange {start|stop|restart|status}"
-    exit 1
-    ;;
-esac
+[Install]
+WantedBy=multi-user.target'  > /etc/init.d/onchange.service
+chmod 755 /etc/init.d/onchange.service
 
-exit 0' > /etc/init.d/onchange
-chmod 755 /etc/init.d/onchange
-
-# bind the service
-if [ -f "/usr/sbin/update-rc.d" ]; then
-    update-rc.d onchange defaults > /dev/null
-else
-    chkconfig --add onchange > /dev/null
-fi
-
-echo '/var/log/onchange.log {
+cho '/var/log/onchange.log {
 su root root
 minsize 10M
 weekly
@@ -493,6 +401,11 @@ endscript
 }' > /etc/logrotate.d/onchange
 
 # start the service
-/etc/init.d/onchange restart
+systemctl daemon-reload
+systemctl enable entrocim
+systemctl enable onchange
+systemctl start entrocim
+systemctl start onchange
+fi
 
 exit 0
