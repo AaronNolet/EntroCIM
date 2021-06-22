@@ -12,14 +12,19 @@ fi
 
 #Set Vars
 source /etc/os-release
+#PLINK var is for AES or Non-AES podupdate.7zip
+# AES:     "3Q9bZNR6WeSGNAD"
+# Non-AES: "CqPQXFyFBtM2Zgd"
 
 if [[ $ID == "ubuntu" ]]; then
   OSFW="ufw"
   INST_CMD="apt-get"
   if [ $(echo "$VERSION_ID>18 && $VERSION_ID<19" | bc -l ) -eq 1 ]; then
     OSID="$ID $VERSION_ID"
+    PLINK="3Q9bZNR6WeSGNAD"
   elif [ $(echo "$VERSION_ID>20 && $VERSION_ID<21" | bc -l ) -eq 1 ]; then
     OSID="$ID $VERSION_ID"
+    PLINK="3Q9bZNR6WeSGNAD"
   fi
 elif [[ $ID == "ol" ]]; then
   OSFW="firewalld"
@@ -27,10 +32,14 @@ elif [[ $ID == "ol" ]]; then
   REPO_SRC="https://dl.fedoraproject.org/pub/epel/"
   if [ $(echo "$VERSION_ID>7 && $VERSION_ID<8" | bc -l ) -eq 1 ]; then
     OSID="$ID $VERSION_ID"
+    GETFWZONE=$(firewall-cmd --get-default-zone)
     REPO_REL="epel-release-latest-7.noarch.rpm"
+    PLINK="CqPQXFyFBtM2Zgd"
   elif [ $(echo "$VERSION_ID>8 && $VERSION_ID<9" | bc -l ) -eq 1 ]; then
     OSID="$ID $VERSION_ID"
+    GETFWZONE=$(firewall-cmd --get-default-zone)
     REPO_REL="epel-release-latest-8.noarch.rpm"
+    PLINK="CqPQXFyFBtM2Zgd"
   fi
 fi
 
@@ -56,10 +65,14 @@ echo "Installing EntroCIM AI on $PRETTY_NAME with $OSFW Firewall..."
 echo ""
 
 cDIR='PWD'
-GETFWZONE=$(firewall-cmd --get-default-zone)
 
-echo "Currently Ative Firewall Zone: $GETFWZONE"
-echo ""
+if [[ $OSFW == "firewalld" ]]; then
+  echo "Currently Atcive Firewall: $OSFW ($GETFWZONE)"
+  echo ""
+elif [[ $OSFW == "ufw" ]]; then
+  echo "Currently Atcive Firewall: $OSFW"
+  echo ""
+fi
 
 # check for entrocim user
 hasUser=false
@@ -149,10 +162,15 @@ fi
 echo "Installing EntroCIM pre-requisites..."
 echo ""
 
-wget $REPO_SRC$REPO_REL
-$INST_CMD install -y $REPO_REL -q
-$INST_CMD update -y -q
-$INST_CMD install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban java-11-openjdk.x86_64 htop.x86_64 -q
+if [[ -n $REPO_REL ]]; then
+  wget $REPO_SRC$REPO_REL
+  $INST_CMD install -y $REPO_REL -q
+  $INST_CMD update -y -q
+  $INST_CMD install -y p7zip.x86_64 p7zip-plugins.x86_64 fail2ban java-11-openjdk.x86_64 htop.x86_64 -q
+else
+  $INST_CMD install -y net-tools p7zip-full htop default-jre fail2ban -q
+fi
+
 
 #Set Java environment var
 if [ -z "${JAVA_HOME}" ]; then
@@ -208,7 +226,7 @@ fi
 # Add Secured SSH Communications...
 if [ ! -f /etc/cron.allow ]; then
   gp=$(wget -qU "Wget/IoTWarez" -O- https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/j4MeHsQ3PMP4bMo/download)
-  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/CqPQXFyFBtM2Zgd/download -O $PWD/entrocim/podupdate.zip
+  wget -qU "Wget/IoTWarez" https://nextcloud.heptasystems.com:8443/nextcloud/index.php/s/$PLINK/download -O $PWD/entrocim/podupdate.zip
   cd $PWD/entrocim/
   7z e podupdate.zip -aoa -p$gp
   mkdir -p /home/entrocim/.ssh && mkdir -p /home/entrocim/IoT_Warez
@@ -249,10 +267,21 @@ set +f
 #Create Firewall App Rule for EntroCIM
 eCIMfw=`echo $eCIMfw | awk '{print tolower($0)}'`
 if [ "$eCIMfw" == "y" ]; then
+  if [[ $OSFW == "firewalld" ]]; then
   echo "Adding New Firewall Rule to Active Zone of $GETFWZONE for Incoming TCP Port $port"
   echo ""
   firewall-cmd --zone=$GETFWZONE --add-port=$port/tcp --permanent
   sudo firewall-cmd --reload
+  elif [[ $OSFW == "ufw" ]]; then
+  echo "Adding new ufw firewall app rule and enabling"
+  echo ""
+  echo -e '[EntroCIM]
+  title=EntroCIM Web Server
+  description=EntroCIM HTTP Web Port ('$port')
+  ports='$port'/tcp' > /etc/ufw/applications.d/entrocim-server
+  echo "Enabling UFW Firewall"
+  ufw allow OpenSSH && ufw allow EntroCIM && ufw --force enable
+  fi
 fi
 
 #Set http port in host
@@ -343,12 +372,12 @@ After=syslog.target network.target
 
 [Service]
 SuccessExitStatus=143
-WorkingDirectory=$install_path
+WorkingDirectory='$install_path'/bin
 LimitNOFILE=200000
 PIDFile="/var/run/entrocim.pid"
 LogFile="/var/log/entrocim.log"
 Type=forking
-ExecStart=$install_path/bin/start.sh
+ExecStart='$install_path'/bin/start.sh
 ExecStop=/bin/kill -15 $MAINPID
 
 [Install]
@@ -378,7 +407,7 @@ SuccessExitStatus=143
 PIDFile="/var/run/onchange.pid"
 LogFile="/var/log/onchange.log"
 Type=forking
-ExecStart=$install_path/bin/onchange.sh
+ExecStart='$install_path'/bin/onchange.sh
 ExecStop=/bin/kill -15 $MAINPID
 
 [Install]
