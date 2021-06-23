@@ -293,7 +293,7 @@ else
   echo "Problem with Auto Configuration of Port"
 fi
 
-echo -e "#!/bin/bash\nsudo -u entrocim java -cp ../lib/java/sys.jar:/lib/java/jline.jar: -Dfan.home=../ fanx.tools.Fan finStackHost  >> ../entrocim.log 2>&1 &" > $install_path/bin/start.sh
+echo -e "#!/bin/bash\nsudo -u entrocim java -Xmx$heapmax -cp ../lib/java/sys.jar:/lib/java/jline.jar: -Dfan.home=../ fanx.tools.Fan finStackHost  >> /var/log/entrocim.log 2>&1 &" > $install_path/bin/start.sh
 echo '#!/bin/bash
 
 # **********************************************
